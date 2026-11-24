@@ -1,0 +1,10 @@
+{
+  "date": "2026-11-25",
+  "config": "128 experts resident, 16k context, MTP EAGLE",
+  "draft": {"type": "Qwen3_5ForCausalLMMTP", "load_seconds": 4.75, "mem_usage_bytes": 3500000000, "draft_loaded": true},
+  "static_fraction": 0.70,
+  "failure": "TileLang verify 3D requires bucketed/padded capacity for UA_DECODE_KV_BLOCK_BUCKETS: value=424, bucket=513",
+  "cause": "the base start_qwen35_server.sh sources setup_env.sh, which unsets UA_DECODE_KV_BLOCK_BUCKETS; the base then sets it to DECODE_KV_BLOCKS=513",
+  "memory_before_failure": {"peak_available_drop_bytes": 22937128960, "available_bytes": 9314684928},
+  "next": "set DECODE_KV_BLOCKS/UA_DECODE_KV_BLOCK_BUCKETS after setup_env, or use a bucket list that survives setup_env"
+}
