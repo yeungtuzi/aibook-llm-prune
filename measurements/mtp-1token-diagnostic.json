@@ -1,0 +1,14 @@
+{
+  "date": "2026-11-25",
+  "goal": "isolate whether the MTP corruption comes from multi-token verify",
+  "attempts": [
+    {"experts": 160, "kv": "int8", "mamba": 12, "fraction": 0.68,
+     "result": "KV check failed: minimum viable 0.7035"},
+    {"experts": 160, "kv": "int8", "mamba": 12, "fraction": 0.72,
+     "result": "KV check still failed: minimum viable 0.7047; the formula ignores the Mamba reservation, and a higher fraction has no room for the 3.5 GB draft"},
+    {"experts": 96, "draft_tokens": 1, "steps": 1, "fraction": 0.70,
+     "result": "decode CUDA graph capture failed: 'M must be divisible by 32, but got 8'; the 1-token verify shape is unsupported by the graph kernel"}
+  ],
+  "known": "96 experts with 4 draft tokens runs at 27.9 tok/s but the output degenerates into '!' after about 30 tokens; 160 without MTP is fully correct",
+  "conclusion": "MTP is blocked by both memory (no valid static-fraction window at 160/128) and correctness (multi-token verify corrupts; one-token verify cannot be graphed). 160 + 128k + MTP + >6GB is arithmetically impossible: 160+128k+INT8 leaves 8.19 GB, and the 3.5 GB draft leaves about 4.7 GB."
+}
