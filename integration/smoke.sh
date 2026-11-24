@@ -8,7 +8,7 @@ source "$HOME/sglang-m1000/env.sh"
 export AIBOOK_OVERLAY="$(realpath "$AIBOOK_OVERLAY")"
 export AIBOOK_PACK_ROOT="$HOME/sglang-m1000/routed-packs-v1" AIBOOK_SLOTS="${AIBOOK_SLOTS:-8}"
 export AIBOOK_RESIDENT="${AIBOOK_RESIDENT:-0}"
-export AIBOOK_PRUNE="${AIBOOK_PRUNE:-$AIBOOK_OVERLAY/prune-160.json}"
+export AIBOOK_PRUNE="${AIBOOK_PRUNE:-$AIBOOK_OVERLAY/prune-$AIBOOK_SLOTS.json}"
 export MODEL_PATH="$HOME/models/gptq-Qwen3.6-35B-A3B-4bit-channel-lmhead"
 export PYTHONPATH="$AIBOOK_OVERLAY${PYTHONPATH:+:$PYTHONPATH}"
 export PYTHONDONTWRITEBYTECODE=1

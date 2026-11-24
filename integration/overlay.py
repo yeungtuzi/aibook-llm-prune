@@ -79,7 +79,7 @@ def main():
         shutil.copytree(site/'sglang', out/'sglang', ignore=shutil.ignore_patterns('__pycache__', '*.pyc'))
         for name, src in sources.items():
             (out/name).write_text(src)
-        for name in ('aibook_loader.py', 'aibook_slots.py', 'module_timing.py', 'routed_graph.py', 'projection_graph.py', 'mapped_banks.py', 'graph_compat.py', 'prune-160.json'):
+        for name in ('aibook_loader.py', 'aibook_slots.py', 'module_timing.py', 'routed_graph.py', 'projection_graph.py', 'mapped_banks.py', 'graph_compat.py', 'prune-160.json', 'prune-128.json'):
             shutil.copyfile(Path(__file__).with_name(name), out/name)
         (out/'AIBOOK_READY').write_text('pinned eager prototype\n')
     print('PASS: 5 source pins, constructor and loader hooks compiled' + ('; overlay ready' if args.out else '; read-only'))
