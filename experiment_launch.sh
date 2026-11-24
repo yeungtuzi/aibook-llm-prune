@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Deploy exact local Git HEAD and start one private AIBOOK smoke unit. No implicit stop.
 set -euo pipefail
-mode=${1:?mode}; slots=${2:?slots}; seconds=${3:-1500}; [[ $slots == 128 || $slots == 140 || $slots == 144 || $slots == 8 || $slots == 160 ]]; [[ $seconds =~ ^[0-9]+$ && $seconds -le 2400 ]]
+mode=${1:?mode}; slots=${2:?slots}; seconds=${3:-1500}; [[ $slots == 96 || $slots == 128 || $slots == 140 || $slots == 144 || $slots == 8 || $slots == 160 ]]; [[ $seconds =~ ^[0-9]+$ && $seconds -le 2400 ]]
 knob2=
 knob3=
 knob4=
