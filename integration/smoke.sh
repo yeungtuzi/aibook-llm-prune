@@ -39,12 +39,11 @@ fi
 export SGLANG_MUSA_ENABLE_QWEN_SHARED_EXPERT_FUSION=0 SGLANG_MUSA_FUSED_MOE_EPILOGUE=0
 # Text-only deployment: no vision tower and no multimodal feature pools.
 export SGLANG_VLM_CACHE_SIZE_MB=0 SGLANG_MM_FEATURE_CACHE_MB=0
-if [[ ${AIBOOK_MTP:-0} == 1 && $MAXTOK -le 65536 ]]; then
-  export UA_DECODE_KV_BLOCK_BUCKETS="${UA_DECODE_KV_BLOCK_BUCKETS:-446}"
-fi
+# TileLang 3D attention insists on an exact KV-block capacity bucket; the
+# capacity depends on the memory left after the resident banks and MTP draft.
+# Provide every integer so the bucket lookup is exact for any capacity.
+export UA_DECODE_KV_BLOCK_BUCKETS="${UA_DECODE_KV_BLOCK_BUCKETS:-$(seq -s, 1 4097)}"
 if (( MAXTOK > 65536 )); then
-  # Decode 3D attention requires the exact KV-block capacity bucket.
-  export UA_DECODE_KV_BLOCK_BUCKETS="${UA_DECODE_KV_BLOCK_BUCKETS:-1578}"
   export UA_DECODE_BLOCK_TABLE_COL_BUCKETS="${UA_DECODE_BLOCK_TABLE_COL_BUCKETS:-512,4097,8193}"
 fi
 export QUANTIZATION=moe_wna16 MAX_TOTAL_TOKENS="$MAXTOK" MAX_PREFILL_TOKENS=32 CHUNKED_PREFILL_SIZE=32
