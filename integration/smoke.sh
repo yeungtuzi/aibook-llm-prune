@@ -68,8 +68,9 @@ if [[ -n ${AIBOOK_MAMBA:-} ]]; then MAMBA_ARGS=(--max-mamba-cache-size "$AIBOOK_
 MTP_ARGS=()
 if [[ ${AIBOOK_MTP:-0} == 1 ]]; then
     MTP_ARGS=(--speculative-algorithm EAGLE --speculative-draft-model-path "$MODEL_PATH"
-              --speculative-num-steps 3 --speculative-eagle-topk 1 --speculative-num-draft-tokens 4
-              --max-mamba-cache-size 12)
+              --speculative-num-steps "${AIBOOK_MTP_STEPS:-3}" --speculative-eagle-topk 1
+              --speculative-num-draft-tokens "${AIBOOK_MTP_DRAFT:-4}"
+              --max-mamba-cache-size "${AIBOOK_MAMBA:-12}")
 fi
 OVERLAP_ARGS=()
 if [[ ${AIBOOK_OVERLAP:-0} != 1 ]]; then
