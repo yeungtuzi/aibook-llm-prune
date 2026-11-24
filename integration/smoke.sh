@@ -64,7 +64,8 @@ fi
 MTP_ARGS=()
 if [[ ${AIBOOK_MTP:-0} == 1 ]]; then
     MTP_ARGS=(--speculative-algorithm EAGLE --speculative-draft-model-path "$MODEL_PATH"
-              --speculative-num-steps 3 --speculative-eagle-topk 1 --speculative-num-draft-tokens 4)
+              --speculative-num-steps 3 --speculative-eagle-topk 1 --speculative-num-draft-tokens 4
+              --max-mamba-cache-size 12)
 fi
 OVERLAP_ARGS=()
 if [[ ${AIBOOK_OVERLAP:-0} != 1 ]]; then
