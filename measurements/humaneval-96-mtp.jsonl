@@ -1,0 +1,84 @@
+{"i": 1, "id": "HumanEval/0", "ok": false, "pass_at_1": 0.0, "err": "e 12     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"}
+{"i": 2, "id": "HumanEval/1", "ok": false, "pass_at_1": 0.0, "err": "e 12     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"}
+{"i": 3, "id": "HumanEval/2", "ok": false, "pass_at_1": 0.0, "err": "e 12     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"}
+{"i": 4, "id": "HumanEval/3", "ok": false, "pass_at_1": 0.0, "err": "ne 14     for op!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"}
+{"i": 5, "id": "HumanEval/4", "ok": false, "pass_at_1": 0.0, "err": "e 13     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"}
+{"i": 6, "id": "HumanEval/5", "ok": false, "pass_at_1": 0.0, "err": "e 11     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"}
+{"i": 7, "id": "HumanEval/6", "ok": false, "pass_at_1": 0.0, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_6.py\", line 13     for group in paren_string.split(): IndentationError: unexpected indent "}
+{"i": 8, "id": "HumanEval/7", "ok": false, "pass_at_1": 0.0, "err": "e 11     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"}
+{"i": 9, "id": "HumanEval/8", "ok": false, "pass_at_1": 0.0, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_8.py\", line 13     product = 1 IndentationError: unexpected indent "}
+{"i": 10, "id": "HumanEval/9", "ok": false, "pass_at_1": 0.0, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_9.py\", line 11     for i in range(len(numbers)): IndentationError: unexpected indent "}
+{"i": 11, "id": "HumanEval/10", "ok": false, "pass_at_1": 0.0, "err": "e 20     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"}
+{"i": 12, "id": "HumanEval/11", "ok": false, "pass_at_1": 0.0, "err": "or i in range(len(a!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"}
+{"i": 13, "id": "HumanEval/12", "ok": false, "pass_at_1": 0.0, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_12.py\", line 16     else:          ^ IndentationError: unindent does not match any outer indentation level "}
+{"i": 14, "id": "HumanEval/13", "ok": false, "pass_at_1": 0.0, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_13.py\", line 12     if b == 0:               ^ IndentationError: unindent does not match any outer indentation leve"}
+{"i": 15, "id": "HumanEval/14", "ok": false, "pass_at_1": 0.0, "err": "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"}
+{"i": 16, "id": "HumanEval/15", "ok": false, "pass_at_1": 0.0, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_15.py\", line 10     return ' '.join(str(i) for i in range(n))     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ SyntaxE"}
+{"i": 17, "id": "HumanEval/16", "ok": false, "pass_at_1": 0.0, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_16.py\", line 11     return len(distinct_chars) IndentationError: unexpected indent "}
+{"i": 18, "id": "HumanEval/17", "ok": false, "pass_at_1": 0.0, "err": "e 17     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"}
+{"i": 19, "id": "HumanEval/18", "ok": false, "pass_at_1": 0.0, "err": "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"}
+{"i": 20, "id": "HumanEval/19", "ok": false, "pass_at_1": 0.0, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_19.py\", line 11     word_to_num = {                   ^ SyntaxError: '{' was never closed "}
+{"i": 21, "id": "HumanEval/20", "ok": false, "pass_at_1": 0.0, "err": "e 12     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"}
+{"i": 22, "id": "HumanEval/21", "ok": false, "pass_at_1": 0.0, "err": "e 10     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"}
+{"i": 23, "id": "HumanEval/22", "ok": false, "pass_at_1": 0.0, "err": "eturn!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"}
+{"i": 24, "id": "HumanEval/23", "ok": false, "pass_at_1": 0.0, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_23.py\", line 10     return len(string)     ^^^^^^^^^^^^^^^^^^ SyntaxError: 'return' outside function "}
+{"i": 25, "id": "HumanEval/24", "ok": false, "pass_at_1": 0.0, "err": "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"}
+{"i": 26, "id": "HumanEval/25", "ok": false, "pass_at_1": 0.0, "err": "e 15     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"}
+{"i": 27, "id": "HumanEval/26", "ok": false, "pass_at_1": 0.0, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_26.py\", line 11     result = [] IndentationError: unexpected indent "}
+{"i": 28, "id": "HumanEval/27", "ok": false, "pass_at_1": 0.0, "err": "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"}
+{"i": 29, "id": "HumanEval/28", "ok": false, "pass_at_1": 0.0, "err": "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"}
+{"i": 30, "id": "HumanEval/29", "ok": false, "pass_at_1": 0.0, "err": "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"}
+{"i": 31, "id": "HumanEval/30", "ok": false, "pass_at_1": 0.0, "err": "ll last):   File \"/home/lf/aibook-bench/work/HumanEval_30.py\", line 24, in <module>     check(get_positive)   File \"/home/lf/aibook-bench/work/HumanEval_30.py\","}
+{"i": 32, "id": "HumanEval/31", "ok": false, "pass_at_1": 0.0, "err": "                                                                                                                                                                "}
+{"i": 33, "id": "HumanEval/32", "ok": false, "pass_at_1": 0.0, "err": "e 24     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"}
+{"i": 34, "id": "HumanEval/33", "ok": false, "pass_at_1": 0.0, "err": "e 12     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"}
+{"i": 35, "id": "HumanEval/34", "ok": false, "pass_at_1": 0.0, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_34.py\", line 8     return sorted(list(set(l)))     ^^^^^^^^^^^^^^^^^^^^^^^^^^^ SyntaxError: 'return' outside functi"}
+{"i": 36, "id": "HumanEval/35", "ok": false, "pass_at_1": 0.0, "err": ".py\", line 11     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"}
+{"i": 37, "id": "HumanEval/36", "ok": false, "pass_at_1": 0.0, "err": "e 13     for i in!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"}
+{"i": 38, "id": "HumanEval/37", "ok": false, "pass_at_1": 0.0, "err": "e 12     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"}
+{"i": 39, "id": "HumanEval/38", "ok": false, "pass_at_1": 0.0, "err": "e 18     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"}
+{"i": 40, "id": "HumanEval/39", "ok": false, "pass_at_1": 0.0, "err": "e 17     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"}
+{"i": 41, "id": "HumanEval/40", "ok": false, "pass_at_1": 0.0, "err": "e 20     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"}
+{"i": 42, "id": "HumanEval/41", "ok": false, "pass_at_1": 0.0, "err": ", line 16     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"}
+{"i": 43, "id": "HumanEval/42", "ok": false, "pass_at_1": 0.0, "err": "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"}
+{"i": 44, "id": "HumanEval/43", "ok": false, "pass_at_1": 0.0, "err": "e 19     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"}
+{"i": 45, "id": "HumanEval/44", "ok": false, "pass_at_1": 0.0, "err": "e 14     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"}
+{"i": 46, "id": "HumanEval/45", "ok": false, "pass_at_1": 0.0, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_45.py\", line 8     return a * h     ^^^^^^^^^^^^ SyntaxError: 'return' outside function "}
+Traceback (most recent call last):
+  File "/home/lf/aibook-bench/bench_humaneval.py", line 52, in <module>
+    main()
+  File "/home/lf/aibook-bench/bench_humaneval.py", line 44, in main
+    ok, err = run_one(task, args.out, args.max_tokens)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lf/aibook-bench/bench_humaneval.py", line 22, in run_one
+    code = task['prompt'] + clean(complete(task['prompt'], max_tokens))
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lf/aibook-bench/bench_humaneval.py", line 13, in complete
+    with urllib.request.urlopen(req, timeout=600) as r:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 1373, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 1348, in do_open
+    r = h.getresponse()
+        ^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 1457, in getresponse
+    response.begin()
+  File "/usr/lib/python3.12/http/client.py", line 336, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 305, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+http.client.RemoteDisconnected: Remote end closed connection without response

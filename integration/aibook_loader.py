@@ -31,6 +31,7 @@ def validate(args, config, load):
     mtp = os.environ.get('AIBOOK_MTP') == '1'
     if getattr(config, 'is_draft_model', False) or getattr(load, 'draft_model_idx', None) is not None:
         require(mtp, 'draft model load requires AIBOOK_MTP=1')
+        os.environ['AIBOOK_LOADING_DRAFT'] = '1'
         return
     require(config is not None and config.hf_config.architectures == ['Qwen3_5MoeForConditionalGeneration']
             and config.quantization == 'moe_wna16' and str(config.dtype) == 'torch.float16',
@@ -105,7 +106,7 @@ def weights(files, source, safetensors):
     # Even the preserved shard contains dense MTP expert weights. Never call
     # get_tensor for MTP/vision (text-only), or for any routed checkpoint key.
     skipped = passed = 0
-    allow_mtp = os.environ.get('AIBOOK_MTP') == '1'
+    allow_mtp = os.environ.get('AIBOOK_LOADING_DRAFT') == '1'
     for path in files:
         with safe_open(path, framework='pt', device='cpu') as shard:
             for name in shard.keys():
