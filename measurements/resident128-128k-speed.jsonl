@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/home/lf/sglang-m1000/trial-9d5ccd7-128-resident/trace/paired_chat.py", line 14, in <module>
+    assert counts==list(range(1,49));g=[(y-x)*1000 for x,y in zip(stamps,stamps[1:])];messages.append(dict(role='assistant',content=d['text']));print(json.dumps(dict(prompt_ids=ids,output_ids=d['output_ids'],cached=d['meta_info']['cached_tokens'],read_bytes=readbytes()-b,ttft=stamps[0]-t,tps=47/(stamps[-1]-stamps[0]),p95=sorted(g)[44],gap_ms=g)),flush=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

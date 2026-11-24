@@ -1,0 +1,12 @@
+{
+  "note": "All numbers are system MemAvailable at the stated point; the 128k service used the 24GB hard cap guard with a 26GB measurement cap.",
+  "resident_160_16k": {"idle_available_bytes": 9281220608, "first_request_peak_available_bytes": 7767425024, "cgroup_peak_bytes": 8718438400, "decode_tps": [21.71735803000469, 22.60235036743383], "p95_ms": 46.29632000433048},
+  "resident_160_128k": {"kv_tokens_allocated": 48736, "requested_tokens": 131072, "conclusion": "160 experts cannot allocate the 128k KV pool; SGLang caps at 48,736 tokens", "peak_available_bytes": 7850602496},
+  "resident_128_128k": {"kv_tokens_allocated": 131072, "idle_available_bytes": 6440255488, "first_request_peak_available_bytes": 4487016448, "cgroup_peak_bytes": 7770480640, "conclusion": "true 128k fits, but the first request leaves only 4.49 GB, already below 6 GB and far below MTP headroom"},
+  "mtp_head_bytes": 1689281536,
+  "feasibility": {
+    "160_128k_mtp_gt6gb": false,
+    "128_128k_mtp_gt6gb": false,
+    "closest_known": "~96 experts + INT8 KV + MTP could reach about 6.0 GB; requires both extra pruning and INT8 KV"
+  }
+}
