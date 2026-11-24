@@ -37,7 +37,7 @@ def validate(args, config, load):
     require(digest(pack_root()/'verified.json') == RECEIPT, 'wrong/incomplete pack receipt')
     require(8 <= int(os.environ['AIBOOK_SLOTS']) < 256, 'slot count must be 8..255')
     mtp = os.environ.get('AIBOOK_MTP') == '1'
-    if getattr(load, 'draft_model_idx', None) is not None:
+    if getattr(config, 'is_draft_model', False) or getattr(load, 'draft_model_idx', None) is not None:
         require(mtp, 'draft model load requires AIBOOK_MTP=1')
         return
     require(args.device == 'musa' and args.language_model_only and args.disable_shared_experts_fusion
