@@ -14,9 +14,9 @@ def complete(prompt, max_tokens):
         return json.loads(r.read())['choices'][0]['text']
 
 def clean(code):
-    code = re.sub(r'^```(?:python)?\s*', '', code.strip())
-    code = re.sub(r'\s*```$', '', code)
-    return code
+    code = re.sub(r'^```(?:python)?\n?', '', code)
+    code = re.sub(r'\n?```\s*$', '', code)
+    return code.rstrip('\n')
 
 def run_one(task, out_dir, max_tokens):
     code = task['prompt'] + clean(complete(task['prompt'], max_tokens))
