@@ -61,6 +61,10 @@ ROUTE_ARGS=()
 if [[ $AIBOOK_EAGER == 1 ]]; then
     ROUTE_ARGS=(--enable-return-routed-experts)
 fi
+KV_ARGS=()
+if [[ -n ${AIBOOK_KV_DTYPE:-} ]]; then KV_ARGS=(--kv-cache-dtype "$AIBOOK_KV_DTYPE"); fi
+MAMBA_ARGS=()
+if [[ -n ${AIBOOK_MAMBA:-} ]]; then MAMBA_ARGS=(--max-mamba-cache-size "$AIBOOK_MAMBA"); fi
 MTP_ARGS=()
 if [[ ${AIBOOK_MTP:-0} == 1 ]]; then
     MTP_ARGS=(--speculative-algorithm EAGLE --speculative-draft-model-path "$MODEL_PATH"
@@ -73,4 +77,4 @@ if [[ ${AIBOOK_OVERLAP:-0} != 1 ]]; then
 fi
 exec ./scripts/ci/musa/start_qwen36_chn_server.sh --disable-shared-experts-fusion \
     "${GRAPH_ARGS[@]}" \
-    "${OVERLAP_ARGS[@]}" "${MTP_ARGS[@]}" --skip-server-warmup "${ROUTE_ARGS[@]}"
+    "${OVERLAP_ARGS[@]}" "${KV_ARGS[@]}" "${MAMBA_ARGS[@]}" "${MTP_ARGS[@]}" --skip-server-warmup "${ROUTE_ARGS[@]}"
