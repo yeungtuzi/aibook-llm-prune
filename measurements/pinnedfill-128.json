@@ -1,0 +1,17 @@
+{
+  "commit": "b251531",
+  "mode": "graphtiming (breakable decode graph + queued pinned fills)",
+  "slots": 128,
+  "unit": "aibook-slot-smoke-trial-b251531-128-graphtiming.service",
+  "release": "/home/lf/sglang-m1000/trial-b251531-128-graphtiming",
+  "parity": "both turns token-for-token identical to the eager 128-slot reference",
+  "warm_steady": {"tps": [11.422077522689465, 10.90970880798177], "p95_ms": [100.09240000363206, 107.78535999997985], "ttft_s": [2.1612032400007593, 6.172402919997694]},
+  "cold_first_run": {"tps": [2.1388601606087616, 4.8525954943295035], "p95_ms": [805.1402400014922, 366.27719999523833]},
+  "previous_graph_probe": {"warm_tps": [10.364876649239045, 10.106873868992132], "p95_ms": [118.10300000070129, 121.78647999826353]},
+  "eager_reference": {"warm_tps": [2.3541772049495755, 3.600421904488034]},
+  "guard": {"baseline_available": 30238801920, "peak_available_drop": 20640628736, "max_cgroup": 8785973248, "cgroup_swap": 0, "guard_stopped": false},
+  "fill_benchmark": {"four_blocking_sync_each_ms": 1.063, "four_async_sync_each_ms": 0.785, "one_contiguous_async_ms": 0.653, "burst17_four_async_ms": 11.33, "burst17_one_async_ms": 8.54},
+  "coalesced_layout_probe": {"legacy_pair_ms": 0.759, "coalesced_pair_ms": 0.722, "bit_equal": true, "note": "layout is not the bottleneck"},
+  "breakdown_per_token": {"route_wait_ms": 21.6, "slot_fill_ms": 29.3, "gemv_reduce_ms": 34.4, "logical_misses": 17, "measured_before_pinned_fill": true},
+  "verdict": "graph path is correct and ~3x the eager slot path; remaining cost is the serialized per-layer routed GEMV plus attention/router, not SSD reads or graph replay"
+}

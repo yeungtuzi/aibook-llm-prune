@@ -1,0 +1,7 @@
+{
+  "trace": "measurements/live-five-128/routes.jsonl (decode rows, 235 tokens, 40 layers, top-8)",
+  "window_union_mean": {"1": 8.0, "2": 13.03, "5": 24.67},
+  "window_union_fraction_of_naive": {"2": 0.815, "5": 0.617},
+  "lru_miss_per_token": {"cap128_w1": 33.86, "cap128_w5": 33.84, "cap144_w1": 31.33, "cap144_w5": 31.31},
+  "conclusion": "A 5-token verify window touches only 24.7 distinct experts per layer (62% of naive 40), but the capacity-bound LRU miss count per token is unchanged (31.3 at 144 for both W=1 and W=5). Speculative decoding amortizes GPU passes, not expert paging; it cannot fix the fill bottleneck."
+}

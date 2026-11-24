@@ -1,0 +1,11 @@
+{
+  "commit": "c889e37",
+  "mode": "graphoverlap (breakable decode graph + per-layer expert MUSAGraph + pinned fill + overlap scheduler)",
+  "slots": 128,
+  "warm_tps": [13.212829925486332, 13.161793457567363],
+  "warm_p95_ms": [91.65299999585841, 91.05688000272494],
+  "warm_read_bytes": [199737344, 16338944],
+  "parity": "token-for-token identical to the eager 128-slot reference",
+  "guard": {"baseline_available": 30343897088, "peak_available_drop": 20796944384, "max_cgroup": 8593776640, "swap": 0},
+  "hot_path_changes": "O(1) expert->slot map instead of list scans; removed a 1.58 MB zeroed bytearray allocation per layer per token"
+}

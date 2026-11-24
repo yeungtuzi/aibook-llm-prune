@@ -1,0 +1,1 @@
+{"baseline": {"event": "baseline", "available": 30462009344, "cgroup": 6811648, "stop_floor": 8462009344}, "peak_drop": 22003585024, "min_available": 8458424320, "max_swap": 0, "guard_stopped": true}

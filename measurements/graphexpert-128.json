@@ -1,0 +1,14 @@
+{
+  "commits": ["461feec", "845c097"],
+  "modes": ["graphexpert", "graphoverlap"],
+  "slots": 128,
+  "parity": "both turns token-for-token identical to the eager 128-slot reference in both modes",
+  "expert_graph": {"warm_tps": [13.078580833043961, 11.162171368946758], "p95_ms": [90.40592000383185, 121.7493999938597], "cold_tps": [2.2249656564242746, 5.07976324222358]},
+  "overlap_scheduler": {"warm_tps": [13.287904757648501, 12.909823018406204], "p95_ms": [89.52588000101969, 90.54319999995641], "ttft_s": [2.1293141599962837, 6.234666399999696]},
+  "previous_best": {"warm_tps": [11.422077522689465, 10.90970880798177], "p95_ms": [100.09240000363206, 107.78535999997985]},
+  "eager_reference": {"warm_tps": [2.3541772049495755, 3.600421904488034]},
+  "guard": {"graphexpert_baseline": 30265655296, "graphexpert_peak_drop": 20799959040, "graphexpert_cgroup": 8462053376, "overlap_baseline": 30349807616, "overlap_peak_drop": 20808900608, "overlap_cgroup": 8996331520, "swap": 0, "guard_stopped": false},
+  "timing_per_token": {"route_wait_ms": 33.45, "fill_ms": 20.28, "gemv_ms": 9.93, "misses": 17, "note": "route now includes the GPU execution moved out of gemv by the inner graph"},
+  "graph_persistence": "torch.musa.MUSAGraph exposes capture_begin/capture_end/replay/instantiate/debug_dump/raw_musa_graph(_exec) but no save/load/serialization API; graph executables embed process-local device pointers",
+  "ceiling": "GPU work is already about 33 ms/token (baseline full graph is about 32 ms); exposed fill+host is about 30 ms/token. Perfect host/I/O overlap would cap at roughly 25-30 tok/s, but route dependency prevents overlapping the next layer's work; reducing misses or fill cost is the remaining lever."
+}

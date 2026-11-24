@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "session": "8d43b2c246d346dfab1960b2b4eb31d9",
+  "system": "You are pair-programming a measurement harness. Use concise, concrete answers; stay within the scope of the current turn.",
+  "model": "/home/lf/models/gptq-Qwen3.6-35B-A3B-4bit-channel-lmhead",
+  "weight_version": "default",
+  "server_version": "0.5.18+20261101.torch2.11",
+  "turns": 2,
+  "max_new_tokens": 24,
+  "max_prompt_tokens": 2048,
+  "requested_token_budget_used": 308,
+  "layout": "little-endian int32 [tokens,40,8]"
+}

@@ -1,0 +1,32 @@
+{
+  "date": "2026-11-25",
+  "commit": "89b24e8",
+  "mode": "resident 160",
+  "vision": "checkpoint index has 0 vision/visual tensors; server already uses --language-model-only; SGLANG_VLM_CACHE_SIZE_MB=0 and SGLANG_MM_FEATURE_CACHE_MB=0 remove the 1.12 GB runtime multimodal reservation",
+  "prune": {
+    "source": "281 decode tokens from live-five-128 + live-harness-01",
+    "method": "top-160 per layer by decode routing frequency; 96 pruned via router -1e9 mask",
+    "unique_per_layer_min_max": [119, 244],
+    "route_mass_loss_max": 0.125,
+    "worst_layers": {"0": 0.125, "2": 0.0996, "1": 0.0952},
+    "note": "PolyStrata Coder keeps 128/256 chosen on code/agentic data; this run keeps 160/256, more conservative, but the trace only covers 281 decode tokens"
+  },
+  "resident": {
+    "banks": "160 experts x 40 layers, 1,579,008 B each (10.1 GB)",
+    "graph": "full decode graph captured (backend=full, bs=[1]); prefill graph disabled",
+    "ready": true
+  },
+  "memory": {
+    "idle_available_bytes": 9072848896,
+    "first_request_peak_drop_bytes": 21831753728,
+    "first_request_available_bytes": 8161521664,
+    "max_cgroup_bytes": 8339533824,
+    "swap": 0,
+    "guard": "stopped at the 22 GB available-drop line during the first request"
+  },
+  "mtp": {
+    "head_bytes": 1689281536,
+    "enabled": false,
+    "reason": "full residency alone leaves 8.16 GB at inference peak; adding the 1.69 GB MTP head leaves 6.47 GB (or 7.38 GB from idle), below the requested 8 GB"
+  }
+}

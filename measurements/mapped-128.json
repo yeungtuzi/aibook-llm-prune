@@ -1,0 +1,27 @@
+{
+  "commit": "8708f67",
+  "mode": "mapped",
+  "slots": 128,
+  "unit": "aibook-slot-smoke-trial-8708f67-128-mapped.service",
+  "release": "/home/lf/sglang-m1000/trial-8708f67-128-mapped",
+  "result": "40 layers x 128 mapped banks allocated and served; token-for-token identical to the eager 128-slot reference",
+  "requests": "measurements/mapped-pair.jsonl",
+  "compared_with": "measurements/budget-pair-eager.jsonl",
+  "guard": {
+    "baseline_available": 30214217728,
+    "peak_available_drop": 20876460032,
+    "min_available": 9474805760,
+    "max_cgroup": 8876322816,
+    "cgroup_swap": 0,
+    "guard_stopped": false,
+    "recovered_available_kib": 29552704
+  },
+  "speed_vs_eager_128": {
+    "turn1_tps": [1.545692066363586, 2.3541772049495755],
+    "turn2_tps": [2.9893819950107754, 3.600421904488034],
+    "turn1_ttft_s": [59.50965064000047, 35.124122080000234],
+    "turn2_ttft_s": [16.173720279999543, 11.156187360000331],
+    "turn2_p95_ms": [496.3229999993928, 351.67483999975957]
+  },
+  "verdict": "correct but slower than ordinary eager slots at equal peak memory; not adopted"
+}

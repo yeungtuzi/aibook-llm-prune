@@ -1,0 +1,11 @@
+{
+  "commit": "e875e6e",
+  "mode": "graphoverlap",
+  "slots": 144,
+  "warm_tps": [14.951935444703116, 14.35424801018265],
+  "warm_p95_ms": [80.25248000194551, 77.07988000038313],
+  "read_bytes": [58593280, 14626816],
+  "parity": "token-for-token identical to the eager 128-slot reference",
+  "guard": {"baseline_available": 30392991744, "peak_available_drop": 21818003456, "max_cgroup": 8798998528, "swap": 0, "stopped": false},
+  "note": "144 slots is the largest cache that stays under the 22 GB guard floor (21.82 GB peak). 160 slots would add about 1.0 GB and cross it."
+}

@@ -1,0 +1,26 @@
+{
+  "commit": "955338f",
+  "mode": "graphprobe (decode backend=breakable, prefill disabled, AIBOOK_GRAPH_PROBE=1)",
+  "slots": 128,
+  "unit": "aibook-slot-smoke-trial-955338f-128-graphprobe.service",
+  "release": "/home/lf/sglang-m1000/trial-955338f-128-graphprobe",
+  "result": "breakable MUSA decode graph captured around the paging module; both turns token-for-token identical to measurements/budget-pair-eager.jsonl",
+  "requests": ["measurements/graphprobe-attn-pair.jsonl", "measurements/graphprobe-attn-pair2.jsonl"],
+  "warm_steady": {
+    "tps": [10.364876649239045, 10.106873868992132],
+    "p95_ms": [118.10300000070129, 121.78647999826353],
+    "ttft_s": [2.4790982800041093, 6.977505440001551],
+    "read_bytes": [767107072, 258375680]
+  },
+  "cold_first_run": {"tps": [4.107655275275724, 7.017532417850047], "p95_ms": [382.3689999990165, 212.26692000345793]},
+  "eager_128_reference": {"tps": [2.3541772049495755, 3.600421904488034], "p95_ms": [573.6356799970963, 351.67483999975957]},
+  "guard": {
+    "baseline_available": 30258302976,
+    "peak_available_drop": 21775851520,
+    "max_cgroup": 7942406144,
+    "cgroup_swap": 0,
+    "guard_stopped": false,
+    "recovered_available_kib": 29606064
+  },
+  "notes": "41 graph segments: 40 eager routed breaks plus the remainder; MUSAGraph replay launch measured 0.006 ms, so segment replay overhead is not the bottleneck. Warm read volume still ~0.26-0.77 GB per 48-token turn; the remaining gap is the eager routed path plus per-token GPU work, not graph replay."
+}

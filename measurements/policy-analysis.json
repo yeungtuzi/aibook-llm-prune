@@ -1,0 +1,9 @@
+{
+  "trace": "measurements/live-five-128/routes.jsonl decode, 235 tokens, 40 layers",
+  "miss_per_token": {
+    "cap128_lru": 33.81, "cap128_lfu": 32.61, "cap128_lru_pin": 33.69,
+    "cap140_lru": 31.79, "cap140_lfu": 31.01, "cap140_lru_pin": 31.72,
+    "cap144_lru": 31.33, "cap144_lfu": 30.60, "cap144_lru_pin": 31.22
+  },
+  "conclusion": "The cache is capacity-bound: LFU is only ~2-2.5% better than LRU, and pinning the current route is neutral. Replacement policy is not a material lever."
+}

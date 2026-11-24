@@ -1,0 +1,7 @@
+[
+  {"topic":"capture", "user":"We are building a Python CLI to record expert routes from a local MoE inference server for an offline cache study. Sketch a compact JSONL record for one turn of a coding conversation. Which fields distinguish prompts, generated text, and route rows?"},
+  {"topic":"capture", "user":"Refine your schema for a warm radix prefix. The server returns routes for the whole sequence except the final sampled token. Give the exact half-open intervals for newly computed prefill and decode; explain the one-token completion edge case."},
+  {"topic":"capture", "user":"Using those intervals, write a small standard-library test: make the cached prefix contain sentinel values that must never enter the replay. Include one negative test for a truncated payload."},
+  {"topic":"reporting", "user":"Now design the offline report for a storage engineer. Compare a frozen previous-turn hot set with per-layer LRU at identical slot budgets. Which counters can be computed from our trace, and which need actual I/O measurements?"},
+  {"topic":"reporting", "user":"Turn your report design into a short reviewer checklist. Include a check for training on the evaluation turn by mistake and a separate check that a topic shift does not silently reset the simulated cache."}
+]

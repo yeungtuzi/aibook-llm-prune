@@ -1,0 +1,11 @@
+{
+  "commit": "05e2e5a",
+  "mode": "graphoverlap + direct expert-graph return",
+  "slots": 140,
+  "warm_tps": [14.046906290236238, 14.160845755586069],
+  "warm_p95_ms": [85.68204000039259, 80.13927999854786],
+  "read_bytes": [188092416, 20922368],
+  "parity": "token-for-token identical to the eager 128-slot reference",
+  "guard": {"baseline_available": 30301712384, "peak_available_drop": 21507936256, "max_cgroup": 9868877824, "swap": 0, "stopped": false},
+  "note": "Stable margin: available at peak 8.94 GB vs guard floor 8.30 GB (0.64 GB). 144 slots reached 14.95 tok/s but left only ~0.05 GB margin and a variant was stopped by the guard at 21.97 GB."
+}

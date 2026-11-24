@@ -1,0 +1,9 @@
+{
+  "probe": "probe_ssd_latency.py, O_DIRECT on routed-packs-v1/layer-00, 1.58 MB records",
+  "qd1_median_ms": 0.9233,
+  "qd1_p95_ms": 3.41116,
+  "qd1_mb_s": 1710.18,
+  "qd8_aggregate_mb_s": 2719.33,
+  "sequential_mb_s": 1320.99,
+  "note": "QD1 latency is already ~0.9 ms; QD8 improves aggregate only 1.6x, so the device is not bandwidth-saturated. Warm decode reads only 16-200 MB per 48-token turn (page-cache hits); on M1000 device copies are UMA, not PCIe."
+}
