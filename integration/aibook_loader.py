@@ -121,5 +121,8 @@ def weights(files, source, safetensors):
                     continue
                 passed += 1
                 yield name, shard.get_tensor(name)
+    if allow_mtp and skipped == 0:
+        log.warning('AIBOOK: MTP draft load, %d mtp/non-routed keys', passed)
+        return
     require(skipped == 40*256*3*4, 'incomplete original expert checkpoint')
     log.warning('AIBOOK: skipped %d routed keys before get_tensor; yielded %d non-routed keys', skipped, passed)
