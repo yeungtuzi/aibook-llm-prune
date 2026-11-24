@@ -36,11 +36,15 @@ def validate(args, config, load):
             'wrong config or index; use the original immutable checkpoint')
     require(digest(pack_root()/'verified.json') == RECEIPT, 'wrong/incomplete pack receipt')
     require(8 <= int(os.environ['AIBOOK_SLOTS']) < 256, 'slot count must be 8..255')
+    mtp = os.environ.get('AIBOOK_MTP') == '1'
+    if getattr(load_config, 'draft_model_idx', None) is not None:
+        require(mtp, 'draft model load requires AIBOOK_MTP=1')
+        return
     require(args.device == 'musa' and args.language_model_only and args.disable_shared_experts_fusion
             and args.tp_size == args.ep_size == args.pp_size == args.dp_size == args.max_running_requests == 1,
             'require MUSA language-only, one worker/request, separate shared expert')
     require(not (args.enable_torch_compile or args.enable_lora or args.enable_eplb or args.ep_num_redundant_experts
-                 or args.speculative_algorithm or args.enable_dp_attention or args.enable_two_batch_overlap
+                 or (args.speculative_algorithm and not mtp) or args.enable_dp_attention or args.enable_two_batch_overlap
                  or args.cpu_offload_gb or args.enable_weights_cpu_backup or args.weight_loader_prefetch_checkpoints
                  or args.custom_weight_loader) and args.weight_cache_mode == 'off'
             and args.init_expert_location == 'trivial' and args.startup_weight_load_mode == 'serial',
@@ -49,7 +53,7 @@ def validate(args, config, load):
     if not resident and os.environ.get('AIBOOK_GRAPH_PROBE') != '1':
         require(all(getattr(args.cuda_graph_config, p).backend == 'disabled' for p in ('decode', 'prefill')),
                 'both resolved graph backends must be disabled')
-    require(load.load_format in ('auto', 'safetensors') and load.draft_model_idx is None,
+    require(load.load_format in ('auto', 'safetensors') and (load.draft_model_idx is None or mtp),
             'require default serial safetensors loader')
 
 
@@ -71,6 +75,8 @@ def make_experts(block, config, quant, a2a, epilogue):
 
 def check_model(model):
     from aibook_slots import BoundedExperts
+    if model.__class__.__name__.endswith('MTP'):
+        return
     layers = model.model.layers
     require(len(layers) == 40 and all(isinstance(layer.mlp.experts, BoundedExperts)
             and layer.mlp.shared_expert is not None and layer.mlp.shared_expert_gate is not None
@@ -99,9 +105,13 @@ def weights(files, source, safetensors):
     # Even the preserved shard contains dense MTP expert weights. Never call
     # get_tensor for MTP/vision (text-only), or for any routed checkpoint key.
     skipped = passed = 0
+    allow_mtp = os.environ.get('AIBOOK_MTP') == '1'
     for path in files:
         with safe_open(path, framework='pt', device='cpu') as shard:
             for name in shard.keys():
+                if allow_mtp and name.startswith('mtp.'):
+                    yield name, shard.get_tensor(name)
+                    continue
                 if name.startswith(('mtp.', 'model.visual.')):
                     continue
                 if '.mlp.experts.' in name:

@@ -54,10 +54,15 @@ ROUTE_ARGS=()
 if [[ $AIBOOK_EAGER == 1 ]]; then
     ROUTE_ARGS=(--enable-return-routed-experts)
 fi
+MTP_ARGS=()
+if [[ ${AIBOOK_MTP:-0} == 1 ]]; then
+    MTP_ARGS=(--speculative-algorithm EAGLE --speculative-draft-model-path "$MODEL_PATH"
+              --speculative-num-steps 3 --speculative-eagle-topk 1 --speculative-num-draft-tokens 4)
+fi
 OVERLAP_ARGS=()
 if [[ ${AIBOOK_OVERLAP:-0} != 1 ]]; then
     OVERLAP_ARGS=(--disable-overlap-schedule)
 fi
 exec ./scripts/ci/musa/start_qwen36_chn_server.sh --disable-shared-experts-fusion \
     "${GRAPH_ARGS[@]}" \
-    "${OVERLAP_ARGS[@]}" --skip-server-warmup "${ROUTE_ARGS[@]}"
+    "${OVERLAP_ARGS[@]}" "${MTP_ARGS[@]}" --skip-server-warmup "${ROUTE_ARGS[@]}"

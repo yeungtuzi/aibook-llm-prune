@@ -35,9 +35,14 @@ def transform(site):
     start = '        self.experts = get_moe_impl_class(quant_config)('
     end = '\n        self.gate = ReplicatedLinear('
     original = src[src.index(start):src.index(end, src.index(start))]
-    sources[BLOCK] = replace_once(src, original,
-        '        from aibook_loader import make_experts\n'
-        '        self.experts = make_experts(self, config, quant_config, get_moe_a2a_backend(), _musa_fused_moe_epilogue)\n')
+    indented = ''.join(('    ' + line) if line.strip() else line for line in original.splitlines(True))
+    replacement = (
+        '        if config.num_hidden_layers == 1:\n'
+        + indented
+        + '        else:\n'
+        '            from aibook_loader import make_experts\n'
+        '            self.experts = make_experts(self, config, quant_config, get_moe_a2a_backend(), _musa_fused_moe_epilogue)\n')
+    sources[BLOCK] = replace_once(src, original, replacement)
     gate_anchor = '        router_logits, _ = self.gate(hidden_states)'
     if sources[BLOCK].count(gate_anchor) != 2:
         raise ValueError('gate anchor missing/ambiguous')
