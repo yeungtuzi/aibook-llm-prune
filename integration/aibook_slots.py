@@ -151,8 +151,9 @@ class BoundedExperts(nn.Module):
             prune_path = Path(os.environ.get('AIBOOK_PRUNE', Path(__file__).with_name('prune-160.json')))
             table = json.loads(prune_path.read_bytes())
             self._kept = [int(e) for e in table['layers'][layer]]
-            if len(self._kept) != 160 or len(set(self._kept)) != 160 or any(not 0 <= e < _EXPERTS for e in self._kept):
-                raise ValueError('invalid prune table')
+            keep = len(self._kept)
+            if keep != slots or not 8 <= keep <= 255 or len(set(self._kept)) != keep or any(not 0 <= e < _EXPERTS for e in self._kept):
+                raise ValueError('prune table does not match the resident slot count')
             lut = torch.zeros(_EXPERTS, dtype=torch.int32, device=self._device)
             for slot, expert in enumerate(self._kept):
                 lut[expert] = slot
