@@ -64,3 +64,11 @@ python3 prune.py --keep 160 --out integration/prune-160.json
 - **128 专家 + 128k**：KV 成功分到 **131,072 tokens**；idle 可用 **6.44 GB**，首个请求峰值 **4.49 GB**（cgroup 7.77 GB）。
 - **MTP head 1.689 GB**：128 + 128k 再加 MTP 预计只剩 **约 2.8 GB**，远低于 6 GB。
 - 因此“160 专家 + 128k + MTP + 剩余 >6GB”在 32 GB 上不可同时满足。可行的最近组合是 **约 96 专家 + INT8 KV + MTP**（预计约 6.0 GB），或放宽 128k/6GB/MTP 中的一项。
+
+## 160 + 128k + INT8 KV（2026-11-25）
+
+- 160 专家全量驻留，`--kv-cache-dtype int8`，`mem-fraction-static 0.68`，Mamba cache 12。
+- KV 成功分配 **131,072 tokens**（K/V 各 0.63 GB），首次实现 **160 + 真 128k**。
+- 请求期间系统可用 **8.19 GB**，峰值下降 23.38 GB，swap 0。
+- 128 token decode **20.43 tok/s**，输出正确。
+- 这是目前最好的可用配置；MTP 仍未叠加（draft 需 3.5 GB，会把可用内存压到约 4.7 GB，且 MTP 输出本身在约 30 token 后损坏）。

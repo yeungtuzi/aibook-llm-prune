@@ -1,0 +1,11 @@
+{
+  "date": "2026-11-25",
+  "config": {"experts": 160, "resident": true, "context": 131072, "kv_cache_dtype": "int8",
+             "mem_fraction_static": 0.68, "max_mamba_cache_size": 12, "guard_cap_gb": 26},
+  "kv": {"tokens": 131072, "dtype": "torch.int8", "k_gb": 0.63, "v_gb": 0.63},
+  "memory": {"idle_available_bytes": 8414347264, "request_available_bytes": 8193040384,
+             "peak_available_drop_bytes": 23375462400, "cgroup_bytes": 6361874432, "swap": 0},
+  "decode": {"tokens": 128, "seconds": 6.266, "tok_s": 20.43, "valid_code": true},
+  "humaneval_16k": {"passed": 24, "total": 30, "pass_at_1": 0.8},
+  "optimized": true
+}
