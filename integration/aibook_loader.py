@@ -28,6 +28,10 @@ def pack_root():
 
 def validate(args, config, load):
     """Called at loader selection, before the vendor allocates any model layers."""
+    mtp = os.environ.get('AIBOOK_MTP') == '1'
+    if getattr(config, 'is_draft_model', False) or getattr(load, 'draft_model_idx', None) is not None:
+        require(mtp, 'draft model load requires AIBOOK_MTP=1')
+        return
     require(config is not None and config.hf_config.architectures == ['Qwen3_5MoeForConditionalGeneration']
             and config.quantization == 'moe_wna16' and str(config.dtype) == 'torch.float16',
             'only the pinned FP16 moe_wna16 Qwen model is supported')
@@ -36,10 +40,6 @@ def validate(args, config, load):
             'wrong config or index; use the original immutable checkpoint')
     require(digest(pack_root()/'verified.json') == RECEIPT, 'wrong/incomplete pack receipt')
     require(8 <= int(os.environ['AIBOOK_SLOTS']) < 256, 'slot count must be 8..255')
-    mtp = os.environ.get('AIBOOK_MTP') == '1'
-    if getattr(config, 'is_draft_model', False) or getattr(load, 'draft_model_idx', None) is not None:
-        require(mtp, 'draft model load requires AIBOOK_MTP=1')
-        return
     require(args.device == 'musa' and args.language_model_only and args.disable_shared_experts_fusion
             and args.tp_size == args.ep_size == args.pp_size == args.dp_size == args.max_running_requests == 1,
             'require MUSA language-only, one worker/request, separate shared expert')
