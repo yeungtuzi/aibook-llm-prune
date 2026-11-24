@@ -46,7 +46,9 @@ if (( MAXTOK > 65536 )); then
 fi
 export QUANTIZATION=moe_wna16 MAX_TOTAL_TOKENS="$MAXTOK" MAX_PREFILL_TOKENS=32 CHUNKED_PREFILL_SIZE=32
 # Keep actual KV and Mamba pool sizes fixed; admit the larger routed weights.
-if [[ $AIBOOK_RESIDENT == 1 ]]; then fraction=0.65; else
+if [[ $AIBOOK_RESIDENT == 1 ]]; then
+  if [[ ${AIBOOK_MTP:-0} == 1 ]]; then fraction=0.70; else fraction=0.65; fi
+else
 case "$AIBOOK_SLOTS" in 8) fraction=0.55;; 128) fraction=0.74;; 140) fraction=0.74;; 144) fraction=0.74;; 160) fraction=0.80;; *) exit 2;; esac
 fi
 export QWEN35_EXTRA_SERVER_ARGS="--mem-fraction-static $fraction --context-length $CTX --max-total-tokens $MAXTOK"
