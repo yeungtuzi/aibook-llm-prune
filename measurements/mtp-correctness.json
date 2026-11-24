@@ -1,0 +1,10 @@
+{
+  "date": "2026-11-25",
+  "mtp_run": {"experts": 96, "context": 16384, "fraction": 0.70, "mamba_cache": 12,
+    "decode_tps": 27.92, "accept_len": 3.58, "accept_rate": 0.86,
+    "available_bytes_during_request": 6242873344, "idle_available_bytes": 8332722176},
+  "correctness": "FAIL: raw completion starts correctly ('return a + b', 'def subtract...') then degenerates into a run of '!' after about 30 tokens",
+  "control": "the same 160-expert resident service without MTP returns valid code for the same prompt",
+  "humaneval": {"limit": 50, "passed": 0, "note": "0/50 is caused by the MTP corruption, not a valid pruning score"},
+  "conclusion": "MTP EAGLE is not numerically correct with the bounded resident expert path / hybrid linear attention in this build; the speed number is not usable until the verify path is fixed"
+}
