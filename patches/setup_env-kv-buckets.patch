@@ -1,0 +1,11 @@
+Preserve UA_DECODE_KV_BLOCK_BUCKETS when AIBOOK_KV_BUCKETS is set.
+
+The vendor setup_env.sh unconditionally unsets the KV bucket list, which makes
+the MTP verify 3D attention fail with "value=..., bucket=513" for every capacity.
+This one-line guard keeps an explicit list when AIBOOK_KV_BUCKETS is present.
+
+--- a/scripts/ci/musa/setup_env.sh
++++ b/scripts/ci/musa/setup_env.sh
+@@ -22,7 +22,7 @@
+-  unset UA_DECODE_KV_BLOCK_BUCKETS
++  if [[ -z "${AIBOOK_KV_BUCKETS:-}" ]]; then unset UA_DECODE_KV_BLOCK_BUCKETS; fi

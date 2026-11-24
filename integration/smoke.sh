@@ -46,7 +46,8 @@ fi
 # TileLang 3D attention insists on an exact KV-block capacity bucket; the
 # capacity depends on the memory left after the resident banks and MTP draft.
 # Provide every integer so the bucket lookup is exact for any capacity.
-export UA_DECODE_KV_BLOCK_BUCKETS="${UA_DECODE_KV_BLOCK_BUCKETS:-$(seq -s, 1 4097)}"
+export AIBOOK_KV_BUCKETS="${AIBOOK_KV_BUCKETS:-$(seq -s, 1 4097)}"
+export UA_DECODE_KV_BLOCK_BUCKETS="${UA_DECODE_KV_BLOCK_BUCKETS:-$AIBOOK_KV_BUCKETS}"
 if (( MAXTOK > 65536 )); then
   export UA_DECODE_BLOCK_TABLE_COL_BUCKETS="${UA_DECODE_BLOCK_TABLE_COL_BUCKETS:-512,4097,8193}"
 fi
