@@ -39,6 +39,11 @@ fi
 export SGLANG_MUSA_ENABLE_QWEN_SHARED_EXPERT_FUSION=0 SGLANG_MUSA_FUSED_MOE_EPILOGUE=0
 # Text-only deployment: no vision tower and no multimodal feature pools.
 export SGLANG_VLM_CACHE_SIZE_MB=0 SGLANG_MM_FEATURE_CACHE_MB=0
+if (( MAXTOK > 65536 )); then
+  # Decode 3D attention requires the exact KV-block capacity bucket.
+  export UA_DECODE_KV_BLOCK_BUCKETS="${UA_DECODE_KV_BLOCK_BUCKETS:-1578}"
+  export UA_DECODE_BLOCK_TABLE_COL_BUCKETS="${UA_DECODE_BLOCK_TABLE_COL_BUCKETS:-512,4097,8193}"
+fi
 export QUANTIZATION=moe_wna16 MAX_TOTAL_TOKENS="$MAXTOK" MAX_PREFILL_TOKENS=32 CHUNKED_PREFILL_SIZE=32
 # Keep actual KV and Mamba pool sizes fixed; admit the larger routed weights.
 if [[ $AIBOOK_RESIDENT == 1 ]]; then fraction=0.65; else
