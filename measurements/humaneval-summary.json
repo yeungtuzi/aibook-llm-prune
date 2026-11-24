@@ -1,0 +1,11 @@
+{
+  "date": "2026-11-25",
+  "benchmark": "HumanEval, first 30 problems, raw completion, temperature 0, max_new_tokens 256, stop at class/def/#/if/print/assert",
+  "hardware": "AIBOOK M1000 32GB, SGLang-MUSA",
+  "pruned_160_resident_16k": {"passed": 24, "total": 30, "pass_at_1": 0.8, "seconds": 226.75, "decode_tps": [21.72, 22.60], "peak_available_bytes": 9482825728},
+  "unpruned_256_paged_144_16k": {"passed": 26, "total": 30, "pass_at_1": 0.8667, "seconds": 351.28},
+  "loss": {"absolute_points": 0.0667, "relative_percent": 7.69,
+           "note": "160/256 experts = 62.5% kept; 30-problem subset, 95% CI is wide (roughly +/-13 points)"},
+  "invalid_runs": {"humaneval_96_mtp": "0/50, invalid: the earlier harness stripped indentation and the MTP verify output was corrupt"},
+  "conclusion": "160-expert resident keeps 92.3% of the unpruned HumanEval score on this subset; the loss is measurable but modest"
+}

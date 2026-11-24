@@ -1,31 +1,31 @@
-{"i": 1, "id": "HumanEval/0", "ok": false, "pass_at_1": 0.0, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_0.py\", line 16     return False                 ^ IndentationError: unindent does not match any outer indentation l"}
-{"i": 2, "id": "HumanEval/1", "ok": true, "pass_at_1": 0.5, "err": null}
-{"i": 3, "id": "HumanEval/2", "ok": false, "pass_at_1": 0.3333333333333333, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_2.py\", line 12     return number - int(number)     ^^^^^^^^^^^^^^^^^^^^^^^^^^^ SyntaxError: 'return' outside functi"}
-{"i": 4, "id": "HumanEval/3", "ok": false, "pass_at_1": 0.25, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_3.py\", line 14     for op in operations: IndentationError: unexpected indent "}
-{"i": 5, "id": "HumanEval/4", "ok": false, "pass_at_1": 0.2, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_4.py\", line 14     abs_diffs = [abs(x - mean) for x in numbers] IndentationError: unexpected indent "}
-{"i": 6, "id": "HumanEval/5", "ok": false, "pass_at_1": 0.16666666666666666, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_5.py\", line 14     result = []                ^ IndentationError: unindent does not match any outer indentation lev"}
-{"i": 7, "id": "HumanEval/6", "ok": true, "pass_at_1": 0.2857142857142857, "err": null}
-{"i": 8, "id": "HumanEval/7", "ok": false, "pass_at_1": 0.25, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_7.py\", line 11     return [s for s in strings if substring in s]     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ "}
-{"i": 9, "id": "HumanEval/8", "ok": false, "pass_at_1": 0.2222222222222222, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_8.py\", line 13     product = 1 IndentationError: unexpected indent "}
-{"i": 10, "id": "HumanEval/9", "ok": false, "pass_at_1": 0.2, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_9.py\", line 11     max_so_far = float('-inf') IndentationError: unexpected indent "}
-{"i": 11, "id": "HumanEval/10", "ok": false, "pass_at_1": 0.18181818181818182, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_10.py\", line 23     for i in range(len(string)):                                 ^ IndentationError: unindent does "}
-{"i": 12, "id": "HumanEval/11", "ok": true, "pass_at_1": 0.25, "err": null}
-{"i": 13, "id": "HumanEval/12", "ok": false, "pass_at_1": 0.23076923076923078, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_12.py\", line 16     max_len = max(len(s) for s in strings)                                           ^ IndentationE"}
-{"i": 14, "id": "HumanEval/13", "ok": false, "pass_at_1": 0.21428571428571427, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_13.py\", line 12     if b == 0:               ^ IndentationError: unindent does not match any outer indentation leve"}
-{"i": 15, "id": "HumanEval/14", "ok": false, "pass_at_1": 0.2, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_14.py\", line 9     return [string[:i] for i in range(1, len(string) + 1)]     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"}
-{"i": 16, "id": "HumanEval/15", "ok": true, "pass_at_1": 0.25, "err": null}
-{"i": 17, "id": "HumanEval/16", "ok": false, "pass_at_1": 0.23529411764705882, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_16.py\", line 11     return len(distinct_chars) IndentationError: unexpected indent "}
-{"i": 18, "id": "HumanEval/17", "ok": false, "pass_at_1": 0.2222222222222222, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_17.py\", line 18     beats = [] IndentationError: unexpected indent "}
-{"i": 19, "id": "HumanEval/18", "ok": false, "pass_at_1": 0.21052631578947367, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_18.py\", line 14     count = 0              ^ IndentationError: unindent does not match any outer indentation level "}
-{"i": 20, "id": "HumanEval/19", "ok": false, "pass_at_1": 0.2, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_19.py\", line 23     num_to_word = {v: k for k, v in word_to_num.items()} IndentationError: unexpected indent "}
-{"i": 21, "id": "HumanEval/20", "ok": false, "pass_at_1": 0.19047619047619047, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_20.py\", line 13     closest_pair = None IndentationError: unexpected indent "}
-{"i": 22, "id": "HumanEval/21", "ok": false, "pass_at_1": 0.18181818181818182, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_21.py\", line 11     max_val = max(numbers) IndentationError: unexpected indent "}
-{"i": 23, "id": "HumanEval/22", "ok": false, "pass_at_1": 0.17391304347826086, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_22.py\", line 11     return [v for v in values if isinstance(v, int)]     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"}
-{"i": 24, "id": "HumanEval/23", "ok": false, "pass_at_1": 0.16666666666666666, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_23.py\", line 10     return len(string)     ^^^^^^^^^^^^^^^^^^ SyntaxError: 'return' outside function "}
-{"i": 25, "id": "HumanEval/24", "ok": false, "pass_at_1": 0.16, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_24.py\", line 11     return n             ^ IndentationError: unindent does not match any outer indentation level "}
-{"i": 26, "id": "HumanEval/25", "ok": false, "pass_at_1": 0.15384615384615385, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_25.py\", line 16     for i in range(2, n + 1): IndentationError: unexpected indent "}
-{"i": 27, "id": "HumanEval/26", "ok": false, "pass_at_1": 0.14814814814814814, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_26.py\", line 11     result = [] IndentationError: unexpected indent "}
-{"i": 28, "id": "HumanEval/27", "ok": false, "pass_at_1": 0.14285714285714285, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_27.py\", line 9     for char in string: IndentationError: unexpected indent "}
-{"i": 29, "id": "HumanEval/28", "ok": false, "pass_at_1": 0.13793103448275862, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_28.py\", line 11     return ''.join(strings)     ^^^^^^^^^^^^^^^^^^^^^^^ SyntaxError: 'return' outside function "}
-{"i": 30, "id": "HumanEval/29", "ok": false, "pass_at_1": 0.13333333333333333, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_29.py\", line 11     return [s for s in strings if s.startswith(prefix)]     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"}
-{"summary": true, "passed": 4, "total": 30, "pass_at_1": 0.13333333333333333, "seconds": 225.56181383132935}
+{"i": 1, "id": "HumanEval/0", "ok": true, "pass_at_1": 1.0, "err": null}
+{"i": 2, "id": "HumanEval/1", "ok": true, "pass_at_1": 1.0, "err": null}
+{"i": 3, "id": "HumanEval/2", "ok": true, "pass_at_1": 1.0, "err": null}
+{"i": 4, "id": "HumanEval/3", "ok": true, "pass_at_1": 1.0, "err": null}
+{"i": 5, "id": "HumanEval/4", "ok": true, "pass_at_1": 1.0, "err": null}
+{"i": 6, "id": "HumanEval/5", "ok": true, "pass_at_1": 1.0, "err": null}
+{"i": 7, "id": "HumanEval/6", "ok": false, "pass_at_1": 0.8571428571428571, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_6.py\", line 14     for group in in paren_string.split():                  ^^ SyntaxError: invalid syntax "}
+{"i": 8, "id": "HumanEval/7", "ok": true, "pass_at_1": 0.875, "err": null}
+{"i": 9, "id": "HumanEval/8", "ok": true, "pass_at_1": 0.8888888888888888, "err": null}
+{"i": 10, "id": "HumanEval/9", "ok": false, "pass_at_1": 0.8, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_9.py\", line 16     rolling_rolling_max_values is simple simple rolling maximum values.                             "}
+{"i": 11, "id": "HumanEval/10", "ok": true, "pass_at_1": 0.8181818181818182, "err": null}
+{"i": 12, "id": "HumanEval/11", "ok": true, "pass_at_1": 0.8333333333333334, "err": null}
+{"i": 13, "id": "HumanEval/12", "ok": false, "pass_at_1": 0.7692307692307693, "err": "  File \"/home/lf/aibook-bench/work/HumanEval_12.py\", line 23     def        ^ SyntaxError: invalid syntax "}
+{"i": 14, "id": "HumanEval/13", "ok": true, "pass_at_1": 0.7857142857142857, "err": null}
+{"i": 15, "id": "HumanEval/14", "ok": true, "pass_at_1": 0.8, "err": null}
+{"i": 16, "id": "HumanEval/15", "ok": true, "pass_at_1": 0.8125, "err": null}
+{"i": 17, "id": "HumanEval/16", "ok": true, "pass_at_1": 0.8235294117647058, "err": null}
+{"i": 18, "id": "HumanEval/17", "ok": true, "pass_at_1": 0.8333333333333334, "err": null}
+{"i": 19, "id": "HumanEval/18", "ok": true, "pass_at_1": 0.8421052631578947, "err": null}
+{"i": 20, "id": "HumanEval/19", "ok": true, "pass_at_1": 0.85, "err": null}
+{"i": 21, "id": "HumanEval/20", "ok": false, "pass_at_1": 0.8095238095238095, "err": "aibook-bench/work/HumanEval_20.py\", line 38, in <module>     check(find_closest_elements)   File \"/home/lf/aibook-bench/work/HumanEval_20.py\", line 32, in check"}
+{"i": 22, "id": "HumanEval/21", "ok": true, "pass_at_1": 0.8181818181818182, "err": null}
+{"i": 23, "id": "HumanEval/22", "ok": true, "pass_at_1": 0.8260869565217391, "err": null}
+{"i": 24, "id": "HumanEval/23", "ok": true, "pass_at_1": 0.8333333333333334, "err": null}
+{"i": 25, "id": "HumanEval/24", "ok": true, "pass_at_1": 0.84, "err": null}
+{"i": 26, "id": "HumanEval/25", "ok": false, "pass_at_1": 0.8076923076923077, "err": "Traceback (most recent call last):   File \"/home/lf/aibook-bench/work/HumanEval_25.py\", line 46, in <module>     check(factorize)   File \"/home/lf/aibook-bench/"}
+{"i": 27, "id": "HumanEval/26", "ok": false, "pass_at_1": 0.7777777777777778, "err": "ile \"/home/lf/aibook-bench/work/HumanEval_26.py\", line 31, in <module>     check(remove_duplicates)   File \"/home/lf/aibook-bench/work/HumanEval_26.py\", line 29"}
+{"i": 28, "id": "HumanEval/27", "ok": true, "pass_at_1": 0.7857142857142857, "err": null}
+{"i": 29, "id": "HumanEval/28", "ok": true, "pass_at_1": 0.7931034482758621, "err": null}
+{"i": 30, "id": "HumanEval/29", "ok": true, "pass_at_1": 0.8, "err": null}
+{"summary": true, "passed": 24, "total": 30, "pass_at_1": 0.8, "seconds": 226.7468123435974}
