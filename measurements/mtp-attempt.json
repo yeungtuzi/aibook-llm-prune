@@ -8,3 +8,12 @@
   "memory_before_failure": {"peak_available_drop_bytes": 22937128960, "available_bytes": 9314684928},
   "next": "set DECODE_KV_BLOCKS/UA_DECODE_KV_BLOCK_BUCKETS after setup_env, or use a bucket list that survives setup_env"
 }
+{
+  "second_attempt": {
+    "fraction": 0.70,
+    "bucket_fix": "setup_env.sh now preserves UA_DECODE_KV_BLOCK_BUCKETS when AIBOOK_KV_BUCKETS is set; full 1..4097 list",
+    "result": "target loaded 11.67 GB, KV passed, draft load started at 12.51 GB available, then the MUSA global OOM killer killed the scheduler",
+    "draft_mem_usage_bytes": 3500000000,
+    "note": "0.65 fails the KV check after draft weights; 0.70 OOMs during draft load. The window is very narrow at 128 experts."
+  }
+}
