@@ -39,6 +39,9 @@ fi
 export SGLANG_MUSA_ENABLE_QWEN_SHARED_EXPERT_FUSION=0 SGLANG_MUSA_FUSED_MOE_EPILOGUE=0
 # Text-only deployment: no vision tower and no multimodal feature pools.
 export SGLANG_VLM_CACHE_SIZE_MB=0 SGLANG_MM_FEATURE_CACHE_MB=0
+if [[ ${AIBOOK_MTP:-0} == 1 && $MAXTOK -le 65536 ]]; then
+  export UA_DECODE_KV_BLOCK_BUCKETS="${UA_DECODE_KV_BLOCK_BUCKETS:-446}"
+fi
 if (( MAXTOK > 65536 )); then
   # Decode 3D attention requires the exact KV-block capacity bucket.
   export UA_DECODE_KV_BLOCK_BUCKETS="${UA_DECODE_KV_BLOCK_BUCKETS:-1578}"
