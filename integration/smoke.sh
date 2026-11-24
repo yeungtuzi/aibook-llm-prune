@@ -39,6 +39,10 @@ fi
 export SGLANG_MUSA_ENABLE_QWEN_SHARED_EXPERT_FUSION=0 SGLANG_MUSA_FUSED_MOE_EPILOGUE=0
 # Text-only deployment: no vision tower and no multimodal feature pools.
 export SGLANG_VLM_CACHE_SIZE_MB=0 SGLANG_MM_FEATURE_CACHE_MB=0
+if [[ ${AIBOOK_MTP:-0} == 1 && $MAXTOK -le 65536 ]]; then
+  # Make DECODE_KV_BLOCKS equal the verify capacity that MTP needs (424).
+  export MUSA_SERVICE_EXTRA_KV_BLOCKS="${MUSA_SERVICE_EXTRA_KV_BLOCKS:--88}"
+fi
 # TileLang 3D attention insists on an exact KV-block capacity bucket; the
 # capacity depends on the memory left after the resident banks and MTP draft.
 # Provide every integer so the bucket lookup is exact for any capacity.
