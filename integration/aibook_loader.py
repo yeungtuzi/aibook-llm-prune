@@ -150,6 +150,17 @@ def verify_tree_greedy_musa(predicts, accept_index, accept_token_num, candidates
     import numpy as np
     import torch
 
+    if __import__('os').environ.get('AIBOOK_NGRAM_DEBUG') == '1' and not getattr(verify_tree_greedy_musa, '_dbg', False):
+        verify_tree_greedy_musa._dbg = True
+        try:
+            __import__('numpy').savez('/home/lf/aibook-bench/ngram-dbg.npz',
+                cand=candidates.detach().cpu().numpy(),
+                ri=retrieve_index.detach().cpu().numpy(),
+                nxt=retrieve_next_token.detach().cpu().numpy(),
+                sib=retrieve_next_sibling.detach().cpu().numpy(),
+                tp=target_predict.detach().cpu().numpy(), topk=topk)
+        except Exception:
+            pass
     cand = candidates.detach().cpu().numpy()
     bs = cand.shape[0]
     ri = retrieve_index.detach().cpu().numpy().reshape(bs, -1)
