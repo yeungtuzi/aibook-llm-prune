@@ -134,6 +134,13 @@ def transform(site):
     ) -> GenerationBatchResult:
         if self._aibook_gate_bypass(batch):
             logging.warning("AIBOOK: NGRAM bypass to target decode")
+            last = []
+            for req in batch.reqs:
+                ids = req.output_ids if req.output_ids else req.origin_input_ids
+                last.append(int(ids[-1]))
+            batch.input_ids = torch.tensor(last, dtype=torch.int64, device=self.device)
+            batch.forward_mode = ForwardMode.DECODE
+            batch.spec_info = None
             return self.target_worker.forward_batch_generation(batch)
         fwd_stream''')
     src = replace_once(src, '            new_seq_lens = batch.seq_lens + accept_lens\n',
