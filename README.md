@@ -79,3 +79,11 @@ python3 prune.py --keep 160 --out integration/prune-160.json
   - 图捕获阶段可用内存跌到 **0.55 GB**，guard 停止，服务失败；
   - 峰值内存下降 **29.66 GB**，swap 0。
 - 结论：**128k + MTP 在 32 GB 上不可行，更不可能满足 >6 GB**。INT8 KV 虽能救 128k，但明确不支持 speculative decode。
+
+## 最终接受配置：160 + 64k + INT8（2026-11-25）
+
+- 160 专家全量驻留，64k 上下文，INT8 KV（K/V 各 0.32 GB），无投机解码。
+- 请求期间系统可用内存约 **7.1–7.5 GB**（>6 GB），峰值内存下降 23.08 GB，swap 0。
+- 热态 decode **20.54 / 20.76 tok/s**（首个请求 16.85 tok/s）。
+- HumanEval 30 题 **80.0%**（对比 256 的 86.7%）。
+- 启动：`./serve-160-64k.sh`（默认 2400 秒 guard 窗口）。

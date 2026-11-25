@@ -1,0 +1,10 @@
+{
+  "date": "2026-11-25",
+  "config": {"experts": 160, "resident": true, "context": 65536, "kv_cache_dtype": "int8",
+             "mem_fraction_static": 0.68, "max_mamba_cache_size": 12, "guard_cap_gb": 24.5},
+  "kv": {"tokens": 65536, "dtype": "torch.int8", "k_gb": 0.32, "v_gb": 0.32},
+  "memory": {"idle_available_bytes": 7492190208, "peak_available_drop_bytes": 23075328000, "swap": 0},
+  "decode": {"first_request_tok_s": 16.85, "warm_tok_s": [20.54, 20.76], "tokens": 128, "valid_code": true},
+  "humaneval_16k_subset": {"passed": 24, "total": 30, "pass_at_1": 0.8},
+  "launch": "./serve-160-64k.sh"
+}
