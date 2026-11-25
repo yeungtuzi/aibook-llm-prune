@@ -1,0 +1,14 @@
+{
+  "date": "2026-11-25",
+  "purpose": "Work around missing MUSA tree-verify topk>1 by a CPU tree walk, to measure NGRAM acceptance and speed.",
+  "config": "96 experts / 32K / FP16 KV / external corpus 1.55M tokens / draft 6 / external SAM budget 4",
+  "startup": {"load_weight_s": 64.11, "kv_allocation_s": 3.16, "target_verify_graph_s": 6.23,
+              "scheduler_e2e_s": 120.89, "tokenizer_e2e_s": 135.24, "free_gb": 8.7},
+  "results": [
+    {"prompt": "systemd/nginx ops question", "output_tokens": 128, "seconds": 35.03,
+     "tok_s": 3.65, "accept_len": 1.0, "accept_rate": 0.0},
+    {"prompt": "exact copy of a systemd unit", "output_tokens": 135, "seconds": 17.43,
+     "tok_s": 7.7, "note": "copy succeeds; no accept counter in this run"}
+  ],
+  "conclusion": "CPU tree-walk makes NGRAM functionally runnable on MUSA, but end-to-end decode is far slower than the 20 tok/s baseline because every verify step performs CPU readback/sync. No NGRAM speedup. A native MUSA topk>1 tree-verify kernel is required; 160/64K also cannot keep >6GB with FP16 KV and NGRAM verify workspace."
+}
