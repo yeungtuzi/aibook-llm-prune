@@ -246,3 +246,22 @@ def verify_tree_greedy_musa_torch(predicts, accept_index, accept_token_num,
     predicts.copy_(pred.view(-1))
     accept_index.copy_(acc)
     accept_token_num.copy_(num)
+
+
+def verify_tree_greedy_musa_native(predicts, accept_index, accept_token_num,
+                                   candidates, retrieve_index,
+                                   retrieve_next_token, retrieve_next_sibling,
+                                   target_predict, topk=-1):
+    """Native MUSA tree verify via the already-installed sgl_kernel op."""
+    import torch
+    from sgl_kernel import verify_tree_greedy
+    verify_tree_greedy(
+        predicts,
+        accept_index,
+        accept_token_num,
+        candidates.to(torch.int64),
+        retrieve_index.to(torch.int64),
+        retrieve_next_token.to(torch.int64),
+        retrieve_next_sibling.to(torch.int64),
+        target_predict.to(torch.int64),
+    )

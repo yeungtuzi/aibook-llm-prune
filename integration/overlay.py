@@ -87,9 +87,15 @@ def transform(site):
                     predicts, accept_index, accept_token_num, candidates,
                     retrieve_index, retrieve_next_token, retrieve_next_sibling,
                     target_predict, topk)
-            else:
+            elif _os.environ.get('AIBOOK_NGRAM_TORCH_VERIFY') == '1':
                 from aibook_loader import verify_tree_greedy_musa_torch
                 verify_tree_greedy_musa_torch(
+                    predicts, accept_index, accept_token_num, candidates,
+                    retrieve_index, retrieve_next_token, retrieve_next_sibling,
+                    target_predict, topk)
+            else:
+                from aibook_loader import verify_tree_greedy_musa_native
+                verify_tree_greedy_musa_native(
                     predicts, accept_index, accept_token_num, candidates,
                     retrieve_index, retrieve_next_token, retrieve_next_sibling,
                     target_predict, topk)''')
