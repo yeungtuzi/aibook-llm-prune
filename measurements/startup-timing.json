@@ -1,10 +1,10 @@
 {
   "date": "2026-11-25",
   "config": "160 resident, 64k, INT8 KV, qwenai.service",
-  "before": {"load_weight_begin": "11:14:40", "load_weight_end": "11:16:22", "load_seconds": 101.83,
-             "kv_alloc_seconds": 14, "graph_capture_seconds": 12.03, "load_begin_to_ready_seconds": 130},
+  "engine_report": {"load_weight": 20.07, "kv_cache_allocation": 0.60, "decode_graph": 11.61, "scheduler_e2e": 71.97, "tokenizer_e2e": 86.24}, "before": {"load_weight_begin": "11:14:40", "load_weight_end": "11:16:22", "load_seconds": 101.83,
+             "mamba_cache_seconds": 13, "kv_cache_allocation_seconds": 0.60, "graph_capture_seconds": 12.03, "load_begin_to_ready_seconds": 130},
   "after_skip_digest": {"load_weight_begin": "11:23:47", "load_weight_end": "11:24:07", "load_seconds": 20.07,
-                        "kv_alloc_seconds": 14, "graph_capture_seconds": 13, "load_begin_to_ready_seconds": 47},
+                        "mamba_cache_seconds": 13, "kv_cache_allocation_seconds": 0.60, "graph_capture_seconds": 13, "load_begin_to_ready_seconds": 47},
   "fill_one_test": {"load_seconds": 103.14, "conclusion": "one staged H2D per expert did not help"},
   "disk": {"pack_read_GB_s": 3.1, "sha256_MB_s": 407.5},
   "saved_seconds": 81.76,

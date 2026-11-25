@@ -93,6 +93,7 @@ python3 prune.py --keep 160 --out integration/prune-160.json
 - `qwenai.service`：160 + 64k + INT8，系统级 user=lf，已 enable，端口 30141；旧 `vllmd.service` 已删除（备份在 `systemd/vllmd.service.removed`）。
 - 启动瓶颈实测：权重加载 **101.8 s → 20.1 s**，靠 `AIBOOK_SKIP_DIGEST=1` 跳过每条 expert 记录的 SHA256；`verified.json` 和每层 manifest 仍校验。
 - `AIBOOK_FILL_ONE=1` 实测无改善（103.1 s），保留但非关键。
-- KV 分配约 14 s、decode graph 捕获约 12 s；这两项目前无法跨进程持久化。
+- 真正耗时的是 **Mamba cache 初始化约 13 s**（0.78 GB 状态，30 层 × 12 slots）；KV 分配本身只有 **0.60 s**，之前把它误算成 KV 了。
+- decode graph 捕获约 12 s；这两项目前都无法跨进程持久化。
 - TileLang 编译缓存 `~/.cache/tilelang/sglang_m1000`（约 123 MB）持久化，重启复用。
 - 从 load begin 到 ready：**130 s → 47 s**。
