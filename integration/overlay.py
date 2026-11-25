@@ -9,6 +9,7 @@ import sys
 BLOCK = 'sglang/srt/models/qwen2_moe.py'
 LOADER = 'sglang/srt/model_loader/loader.py'
 SPEC_HOOK = 'sglang/srt/arg_groups/speculative_hook.py'
+EAGLE_UTILS = 'sglang/srt/speculative/eagle_utils.py'
 PINS = {
     BLOCK: '458c5ee4eb425310ce9eb2f664cc6f1e608d36f3056bf306a07025fc7f259b1e',
     LOADER: '543e5a49a45fa738ff7115820dc07e5d1074387d6583b4204e58e09e1e25ded9',
@@ -16,6 +17,7 @@ PINS = {
     'sglang/srt/layers/quantization/moe_wna16.py': '23146f3f51a00247d5e78f5771bff354bf98587d22de36094c6dae928fa6bb9d',
     'mate/batched_gemv/tilelang/batched_gemv_w4a16_moe.py': '7654aacc136978cb3c12f348794cc3203f285521afc295588cce368d163d9750',
     SPEC_HOOK: '0817c9e460a94b62abc08702d51e3dc1ba47a739ab9dd6ef2227ffd6787a4f8f',
+    EAGLE_UTILS: '32d9035c9c240f65876cdcbfd8f7d64ec5c7f6acba710b1978cb5f1af2a775ab',
 }
 
 
@@ -31,7 +33,7 @@ def transform(site):
         data = (site/name).read_bytes()
         if hashlib.sha256(data).hexdigest() != sha:
             raise ValueError('vendor source drift: ' + name)
-        if name in (LOADER, BLOCK, SPEC_HOOK):
+        if name in (LOADER, BLOCK, SPEC_HOOK, EAGLE_UTILS):
             sources[name] = data.decode()
     src = sources[BLOCK]
     start = '        self.experts = get_moe_impl_class(quant_config)('
@@ -71,6 +73,20 @@ def transform(site):
     src = replace_once(src, 'Ngram speculative decoding only supports CUDA or CPU devices.',
                        'Ngram speculative decoding only supports CUDA, CPU or MUSA devices.')
     sources[SPEC_HOOK] = src
+    src = sources[EAGLE_UTILS]
+    src = replace_once(src, '''    elif _is_musa:
+        if topk != 1:
+            raise NotImplementedError(
+                "MUSA tree verify currently supports topk=1 only"
+            )''', '''    elif _is_musa:
+        if topk != 1:
+            from aibook_loader import verify_tree_greedy_musa
+            verify_tree_greedy_musa(
+                predicts, accept_index, accept_token_num, candidates,
+                retrieve_index, retrieve_next_token, retrieve_next_sibling,
+                target_predict, topk)
+            return''')
+    sources[EAGLE_UTILS] = src
     for path, src in sources.items():
         compile(src, path, 'exec')
     return sources
@@ -95,7 +111,7 @@ def main():
         for name in ('aibook_loader.py', 'aibook_slots.py', 'module_timing.py', 'routed_graph.py', 'projection_graph.py', 'mapped_banks.py', 'graph_compat.py', 'prune-160.json', 'prune-128.json', 'prune-96.json'):
             shutil.copyfile(Path(__file__).with_name(name), out/name)
         (out/'AIBOOK_READY').write_text('pinned eager prototype\n')
-    print('PASS: 5 source pins, constructor and loader hooks compiled' + ('; overlay ready' if args.out else '; read-only'))
+    print('PASS: 6 source pins, constructor and loader hooks compiled' + ('; overlay ready' if args.out else '; read-only'))
 
 
 if __name__ == '__main__':

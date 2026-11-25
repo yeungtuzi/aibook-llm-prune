@@ -141,3 +141,45 @@ def weights(files, source, safetensors):
         return
     require(skipped == 40*256*3*4, 'incomplete original expert checkpoint')
     log.warning('AIBOOK: skipped %d routed keys before get_tensor; yielded %d non-routed keys', skipped, passed)
+
+
+def verify_tree_greedy_musa(predicts, accept_index, accept_token_num, candidates,
+                            retrieve_index, retrieve_next_token,
+                            retrieve_next_sibling, target_predict, topk=-1):
+    """CPU tree walk for irregular NGRAM trees on MUSA (topk != 1)."""
+    import numpy as np
+    import torch
+
+    cand = candidates.detach().cpu().numpy()
+    bs = cand.shape[0]
+    ri = retrieve_index.detach().cpu().numpy().reshape(bs, -1)
+    nxt = retrieve_next_token.detach().cpu().numpy().reshape(bs, -1)
+    sib = retrieve_next_sibling.detach().cpu().numpy().reshape(bs, -1)
+    tp = target_predict.detach().cpu().numpy().reshape(bs, -1)
+    pred = predicts.detach().cpu().numpy().reshape(bs, -1).copy()
+    acc = accept_index.detach().cpu().numpy().copy()
+    num = np.zeros((bs,), dtype=np.int32)
+    for b in range(bs):
+        last = int(ri[b, 0])
+        acc[b, 0] = last
+        accepted = 0
+        for depth in range(1, acc.shape[1]):
+            target = int(tp[b, last])
+            child = int(nxt[b, last])
+            chosen = -1
+            while child != -1:
+                if int(cand[b, child]) == target:
+                    chosen = child
+                    break
+                child = int(sib[b, child])
+            if chosen < 0:
+                break
+            pred[b, last] = target
+            accepted += 1
+            acc[b, depth] = chosen
+            last = chosen
+        pred[b, last] = int(tp[b, last])
+        num[b] = accepted
+    predicts.copy_(torch.from_numpy(pred.reshape(-1)).to(predicts.device))
+    accept_index.copy_(torch.from_numpy(acc).to(accept_index.device))
+    accept_token_num.copy_(torch.from_numpy(num).to(accept_token_num.device))
