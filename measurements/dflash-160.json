@@ -1,0 +1,14 @@
+{
+  "date": "2026-11-25",
+  "draft": {"repo": "z-lab/Qwen3.6-35B-A3B-DFlash", "path": "/home/lf/models/Qwen3.6-35B-A3B-DFlash",
+            "bytes": 771819674, "arch": "DFlashDraftModel", "layers": 6, "dense": true},
+  "config": {"experts": 160, "resident": true, "context": 16384, "kv": "fp16",
+             "mamba_cache": 12, "mem_fraction_static": 0.78, "guard_cap_gb": 28},
+  "launch": "OK, service ready",
+  "idle_available_bytes": 5650808832,
+  "correctness": "PASS: valid code output for the same prompts that MTP corrupted",
+  "accept_len": 1.00,
+  "accept_rate": 0.00,
+  "decode_tps": 2.67,
+  "conclusion": "DFLASH draft is unpruned and trained against the 256-expert target; the 160-expert target produces different hidden states so every draft token is rejected. Correct but no speedup. Vendor full 256+DFLASH cannot allocate KV on 32GB (weights leave ~2.7GB)."
+}
