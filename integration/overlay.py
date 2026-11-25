@@ -11,6 +11,8 @@ LOADER = 'sglang/srt/model_loader/loader.py'
 SPEC_HOOK = 'sglang/srt/arg_groups/speculative_hook.py'
 EAGLE_UTILS = 'sglang/srt/speculative/eagle_utils.py'
 NGRAM_WORKER = 'sglang/srt/speculative/ngram_worker.py'
+WARMUP = 'sglang/srt/entrypoints/warmup.py'
+POOL_HOST_BASE = 'sglang/srt/mem_cache/pool_host/base.py'
 PINS = {
     BLOCK: '458c5ee4eb425310ce9eb2f664cc6f1e608d36f3056bf306a07025fc7f259b1e',
     LOADER: '543e5a49a45fa738ff7115820dc07e5d1074387d6583b4204e58e09e1e25ded9',
@@ -20,6 +22,8 @@ PINS = {
     SPEC_HOOK: '0817c9e460a94b62abc08702d51e3dc1ba47a739ab9dd6ef2227ffd6787a4f8f',
     EAGLE_UTILS: '32d9035c9c240f65876cdcbfd8f7d64ec5c7f6acba710b1978cb5f1af2a775ab',
     NGRAM_WORKER: '74e8e20515dd0eb5c7e165c11480150f755a4bdf7c3089f953d3898fbc508b69',
+    WARMUP: 'ae22310be50b75058e10eee821dd11dcb7ecdf1fbd802e4b93373a4078739bd8',
+    POOL_HOST_BASE: 'd5540a147704ce2724fb9dbd9b9e7eca052d572533b2c3922e603e68b58421d9',
 }
 
 
@@ -35,7 +39,7 @@ def transform(site):
         data = (site/name).read_bytes()
         if hashlib.sha256(data).hexdigest() != sha:
             raise ValueError('vendor source drift: ' + name)
-        if name in (LOADER, BLOCK, SPEC_HOOK, EAGLE_UTILS, NGRAM_WORKER):
+        if name in (LOADER, BLOCK, SPEC_HOOK, EAGLE_UTILS, NGRAM_WORKER, WARMUP, POOL_HOST_BASE):
             sources[name] = data.decode()
     src = sources[BLOCK]
     start = '        self.experts = get_moe_impl_class(quant_config)('
@@ -156,6 +160,37 @@ def transform(site):
         '            if self._aibook_gate_enabled:\n'
         '                self._aibook_observe_gate(batch, accept_lens)\n')
     sources[NGRAM_WORKER] = src
+    src = sources[WARMUP]
+    src = replace_once(src, 'import logging\n', 'import logging\nimport os\n')
+    warmup_fn = '''@warmup("aibook_prefill")
+async def aibook_prefill(disaggregation_mode: str, tokenizer_manager: TokenizerManager):
+    raw = os.environ.get("AIBOOK_WARMUP_SIZES", "2048,8192,16384,65520")
+    max_ctx = int(os.environ.get("AIBOOK_CONTEXT", "65536"))
+    sizes = []
+    for part in raw.split(","):
+        if not part.strip():
+            continue
+        n = max(64, int(part.strip()))
+        n = 1 << (n - 1).bit_length()
+        n = min(n, max_ctx - 16)
+        if n not in sizes:
+            sizes.append(n)
+    for size in sizes:
+        logger.info("AIBOOK warmup prefill tokens=%d", size)
+        generate_req_input = GenerateReqInput(
+            input_ids=np.random.randint(2**16, size=[size]).tolist(),
+            sampling_params={"max_new_tokens": 1, "temperature": 0.0},
+        )
+        await tokenizer_manager.generate_request(generate_req_input, None).__anext__()
+
+'''
+    anchor = 'try:\n    import sglang.srt.layers.attention.mate_tilelang_prefill_warmup'
+    src = replace_once(src, anchor, warmup_fn + anchor)
+    sources[WARMUP] = src
+    src = sources[POOL_HOST_BASE]
+    src = replace_once(src, 'HICACHE_HOST_MEMORY_RESERVE_BYTES: int = 10 * (1024**3)',
+                       'HICACHE_HOST_MEMORY_RESERVE_BYTES: int = 4 * (1024**3)')
+    sources[POOL_HOST_BASE] = src
     for path, src in sources.items():
         compile(src, path, 'exec')
     return sources

@@ -7,6 +7,7 @@ set -euo pipefail
 source "$HOME/sglang-m1000/env.sh"
 export AIBOOK_OVERLAY="$(realpath "$AIBOOK_OVERLAY")"
 export AIBOOK_PACK_ROOT="$HOME/sglang-m1000/routed-packs-v1" AIBOOK_SLOTS="${AIBOOK_SLOTS:-8}"
+export AIBOOK_WARMUP_SIZES="${AIBOOK_WARMUP_SIZES:-2048,8192,16384,65520}"
 export SGLANG_CACHE_DIR="${SGLANG_CACHE_DIR:-$HOME/.cache/sglang}"
 export TILELANG_CACHE_DIR="${TILELANG_CACHE_DIR:-$HOME/.cache/tilelang/sglang_m1000}"
 export AIBOOK_RESIDENT="${AIBOOK_RESIDENT:-0}"
@@ -110,7 +111,7 @@ WARMUP_ARGS=()
 case "${AIBOOK_WARMUP:-short}" in
     0|off|none) WARMUP_ARGS=(--skip-server-warmup) ;;
     short) ;;
-    prefill) WARMUP_ARGS=(--warmups prefill_shapes) ;;
+    prefill) WARMUP_ARGS=(--warmups aibook_prefill) ;;
     *) echo "unknown AIBOOK_WARMUP=${AIBOOK_WARMUP}" >&2; exit 2 ;;
 esac
 exec ./scripts/ci/musa/start_qwen36_chn_server.sh --disable-shared-experts-fusion \
