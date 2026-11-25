@@ -211,7 +211,7 @@ class BoundedExperts(nn.Module):
     def _resident_preload(self):
         """Read a full layer into a pinned bank-major host buffer, then one H2D."""
         n = len(self._kept)
-        host = torch.empty((n * _RECORD,), dtype=torch.uint8, pin_memory=True)
+        host = torch.empty((n * _RECORD,), dtype=torch.uint8, device='cpu', pin_memory=True)
         hv = memoryview(host.numpy())
         offsets = []
         off = 0
