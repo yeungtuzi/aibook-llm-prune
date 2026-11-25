@@ -18,6 +18,64 @@ AIBOOK（M1000，32 GB 统一内存）上的 Qwen3.6-35B-A3B 专家剪枝 / 全�
 - **MTP / DFLASH 未开启**：受 32 GB 内存限制，为保证系统剩余约 **8 GB** 基本可用性，MTP draft（约 3.5 GB）和 DFLASH draft 都没有叠加；DFLASH 实测对 160 剪枝 target 接受率为 0。
 - **生产服务**：仍是 `qwenai.service` 的 **160 / 64k / INT8 / 无投机**，20.4 tok/s；N-gram 是独立实验路径，不替换生产。
 
+## 三种运行配置（互斥，均占用 30141）
+
+三套配置只能同时运行一套；切换前先停掉当前服务或实验 unit。
+
+### 1. 全 256 专家 + 128 动态热专家（质量优先，约 13 tok/s）
+
+- 路由：完整 256 expert，不剪枝；
+- 权重：`routed-packs-v1` 的 256 条原始 expert 记录，128-slot LRU 热缓存，miss 直接 O_DIRECT/pread 换入；
+- 16K 上下文，`graphoverlap`（breakable decode graph + expert graph + overlap + pinned fill）；
+- 实测 **13.2 tok/s**，命中率约 89%，可用内存约 9.5 GB；
+- 适合：不接受剪枝质量损失、能接受 13 tok/s 的运维/通用场景。
+
+```bash
+# 在 aibook-llm-prune 仓库根目录执行；先停掉 30141 上的服务
+ssh -i ~/.ssh/id_ed25519_aibook lf@192.168.100.193 'sudo systemctl stop qwenai.service'
+AIBOOK_CONTEXT=16384 AIBOOK_MAX_TOKENS=16384 \
+AIBOOK_MAMBA=12 AIBOOK_FRACTION=0.74 \
+bash experiment_launch.sh graphoverlap 128 2400
+```
+
+> 这是 2400 秒的实验 unit，不是开机自启服务；到期后需重新拉起。
+
+### 2. 160 专家全驻留（Coder 默认，约 20 tok/s）
+
+- 256 → 160 专家，`prune_mask` 只保留 coder 路由校准后的 160 个；
+- 64K，INT8 KV，无投机；
+- 实测 **20.4 tok/s**，HumanEval 30 题 **80.0%**，可用内存约 7–8 GB；
+- 适合：编码、脚本、日常对话；这是当前生产配置。
+
+```bash
+ssh -i ~/.ssh/id_ed25519_aibook lf@192.168.100.193 'sudo systemctl start qwenai.service'
+# 等约 110 秒，直到 /v1/models 返回 200
+```
+
+### 3. 96 专家全驻留 + N-gram（运维高匹配，15–32 tok/s）
+
+- 96 专家全驻留，32K，FP16 KV（N-gram verify 必需）；
+- 运维 N-gram 知识库：`/home/lf/aibook-bench/ngram-corpus.jsonl`（1.55M tokens，JSONL）；
+- native `sgl_kernel.verify_tree_greedy`，draft=8，external SAM budget=6；
+- 实测：高匹配稳态 **32.8 tok/s**，低匹配 **约 15 tok/s**；
+- 可用内存约 **8.8–9.2 GB**；
+- 适合：systemd/配置/命令模板等重复性高的运维请求；自由排障问答接近 miss，没有收益。
+- **不要开自适应门控**：`AIBOOK_NGRAM_GATE` 默认关闭；当前 fallback 实测 9.6 tok/s，低于基线。
+
+```bash
+ssh -i ~/.ssh/id_ed25519_aibook lf@192.168.100.193 'sudo systemctl stop qwenai.service'
+AIBOOK_NGRAM_CORPUS=/home/lf/aibook-bench/ngram-corpus.jsonl \
+AIBOOK_NGRAM_MAX_TOKENS=7000000 \
+AIBOOK_NGRAM_SAM_BUDGET=6 \
+AIBOOK_NGRAM_DRAFT=8 \
+AIBOOK_CONTEXT=32768 AIBOOK_MAX_TOKENS=32768 \
+AIBOOK_MAMBA=12 AIBOOK_FRACTION=0.78 \
+AIBOOK_DECODE_LOG_INTERVAL=1 \
+bash experiment_launch.sh residentngram 96 2400
+```
+
+> 同样是 2400 秒实验 unit；日常 coder 服务请用配置 2。
+
 ## 目标
 
 1. 把 routed experts 从 **256 剪到 160**（按真实路由频次，router logits 对剪掉的专家加 `-1e9` mask）。
