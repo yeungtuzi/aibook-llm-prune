@@ -132,7 +132,7 @@ def transform(site):
     def forward_batch_generation(
         self, batch: ScheduleBatch, on_publish=None
     ) -> GenerationBatchResult:
-        if self._aibook_gate_bypass(batch):
+        if self._aibook_gate_enabled and self._aibook_gate_bypass(batch):
             logging.warning("AIBOOK: NGRAM bypass to target decode")
             last = []
             for req in batch.reqs:
@@ -152,7 +152,8 @@ def transform(site):
         fwd_stream''')
     src = replace_once(src, '            new_seq_lens = batch.seq_lens + accept_lens\n',
         '            new_seq_lens = batch.seq_lens + accept_lens\n'
-        '            self._aibook_observe_gate(batch, accept_lens)\n')
+        '            if self._aibook_gate_enabled:\n'
+        '                self._aibook_observe_gate(batch, accept_lens)\n')
     sources[NGRAM_WORKER] = src
     for path, src in sources.items():
         compile(src, path, 'exec')
