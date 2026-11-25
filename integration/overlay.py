@@ -139,6 +139,8 @@ def transform(site):
                 ids = req.output_ids if req.output_ids else req.origin_input_ids
                 last.append(int(ids[-1]))
             batch.input_ids = torch.tensor(last, dtype=torch.int64, device=self.device)
+            if getattr(batch, "out_cache_loc", None) is not None:
+                batch.out_cache_loc = batch.out_cache_loc[: len(batch.reqs)]
             batch.forward_mode = ForwardMode.DECODE
             batch.spec_info = None
             return self.target_worker.forward_batch_generation(batch)
