@@ -80,11 +80,19 @@ def transform(site):
                 "MUSA tree verify currently supports topk=1 only"
             )''', '''    elif _is_musa:
         if topk != 1:
-            from aibook_loader import verify_tree_greedy_musa
-            verify_tree_greedy_musa(
-                predicts, accept_index, accept_token_num, candidates,
-                retrieve_index, retrieve_next_token, retrieve_next_sibling,
-                target_predict, topk)''')
+            import os as _os
+            if _os.environ.get('AIBOOK_NGRAM_CPU_VERIFY') == '1':
+                from aibook_loader import verify_tree_greedy_musa
+                verify_tree_greedy_musa(
+                    predicts, accept_index, accept_token_num, candidates,
+                    retrieve_index, retrieve_next_token, retrieve_next_sibling,
+                    target_predict, topk)
+            else:
+                from aibook_loader import verify_tree_greedy_musa_torch
+                verify_tree_greedy_musa_torch(
+                    predicts, accept_index, accept_token_num, candidates,
+                    retrieve_index, retrieve_next_token, retrieve_next_sibling,
+                    target_predict, topk)''')
     sources[EAGLE_UTILS] = src
     for path, src in sources.items():
         compile(src, path, 'exec')

@@ -194,3 +194,55 @@ def verify_tree_greedy_musa(predicts, accept_index, accept_token_num, candidates
     predicts.copy_(torch.from_numpy(pred.reshape(-1)).to(predicts.device))
     accept_index.copy_(torch.from_numpy(acc).to(accept_index.device))
     accept_token_num.copy_(torch.from_numpy(num).to(accept_token_num.device))
+
+
+def verify_tree_greedy_musa_torch(predicts, accept_index, accept_token_num,
+                                  candidates, retrieve_index,
+                                  retrieve_next_token, retrieve_next_sibling,
+                                  target_predict, topk=-1):
+    """GPU-only irregular-tree greedy verify using small PyTorch ops.
+
+    Avoids the GPU->CPU sync of the tree walk: build the child adjacency on
+    device, then walk one depth at a time with masked gathers.
+    """
+    import torch
+
+    bs, n = candidates.shape
+    dev = candidates.device
+    max_depth = accept_index.shape[1]
+    idx = torch.arange(n, device=dev, dtype=torch.long)
+    bidx = torch.arange(bs, device=dev, dtype=torch.long)
+    child_mask = torch.zeros((bs, n, n), dtype=torch.bool, device=dev)
+    child = retrieve_next_token.to(torch.long).clone()
+    for _ in range(n):
+        valid = child >= 0
+        c = child.clamp_min(0)
+        parent = idx.view(1, n).expand(bs, n)
+        child_mask[bidx.view(bs, 1), parent, c] = valid
+        nxt = retrieve_next_sibling.to(torch.long).gather(1, c)
+        child = torch.where(valid, nxt, torch.full_like(child, -1))
+    current = retrieve_index[:, 0].to(torch.long)
+    pred = predicts.view(bs, n).clone()
+    acc = torch.full((bs, max_depth), -1, dtype=torch.int32, device=dev)
+    acc[:, 0] = current
+    num = torch.zeros(bs, dtype=torch.int32, device=dev)
+    active = torch.ones(bs, dtype=torch.bool, device=dev)
+    for depth in range(1, max_depth):
+        target = target_predict.gather(1, current.view(bs, 1)).squeeze(1).to(pred.dtype)
+        children = child_mask.gather(
+            1, current.view(bs, 1, 1).expand(bs, 1, n)
+        ).squeeze(1)
+        match = children & (candidates == target.view(bs, 1)) & active.view(bs, 1)
+        has = match.any(dim=1)
+        chosen = match.to(torch.int8).argmax(dim=1).to(torch.long)
+        chosen = torch.where(has, chosen, current)
+        pred.scatter_(1, current.view(bs, 1), target.view(bs, 1))
+        acc[:, depth] = torch.where(has, chosen, torch.full_like(chosen, -1)).to(torch.int32)
+        current = chosen
+        num += has.to(torch.int32)
+        active = has
+    final_target = target_predict.gather(1, current.view(bs, 1)).squeeze(1).to(pred.dtype)
+    pred.scatter_(1, current.view(bs, 1), final_target.view(bs, 1))
+    predicts.copy_(pred.view(-1))
+    accept_index.copy_(acc)
+    accept_token_num.copy_(num)
