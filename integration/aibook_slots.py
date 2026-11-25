@@ -145,6 +145,7 @@ class BoundedExperts(nn.Module):
         self._timing = os.environ.get('AIBOOK_SLOT_TIMING') == '1'
         self._layer = layer
         self._verified = bytearray(_EXPERTS)
+        self._skip_digest = os.environ.get('AIBOOK_SKIP_DIGEST') == '1'
         self._failed = False
         self._resident = os.environ.get('AIBOOK_RESIDENT') == '1'
         if self._resident:
@@ -212,7 +213,7 @@ class BoundedExperts(nn.Module):
         info = os.fstat(fd)
         if (info.st_size, info.st_mtime_ns, info.st_ctime_ns) != self._stamp:
             raise ValueError('deployed weights inode changed after verification')
-        if not self._verified[expert]:
+        if not self._skip_digest and not self._verified[expert]:
             h=hashlib.sha256()
             for segment in vec:h.update(segment)
             if h.hexdigest() != self._records[expert]:

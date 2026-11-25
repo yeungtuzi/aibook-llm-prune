@@ -1,0 +1,37 @@
+# /etc/systemd/system/vllmd.service
+[Unit]
+Description=vLLM OpenAI-compatible server (Qwen3-30B-A3B-GPTQ-Int4, MUSA)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=lf
+Group=lf
+WorkingDirectory=/home/lf
+Environment=HOME=/home/lf
+Environment=HF_HUB_OFFLINE=1
+Environment=VLLM_NO_USAGE_STATS=1
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/usr/local/bin/vllm serve /home/lf/models/Qwen3-30B-A3B-GPTQ-Int4 \
+  --served-model-name qwen3-30b-a3b \
+  --quantization gptq \
+  --max-model-len 4096 \
+  --gpu-memory-utilization 0.80 \
+  --enforce-eager \
+  --block-size 32 \
+  --host 127.0.0.1 \
+  --port 8000
+Restart=on-failure
+RestartSec=10
+TimeoutStartSec=900
+TimeoutStopSec=60
+KillMode=mixed
+# 防止把整机内存打爆：超限时只在本 cgroup 内 OOM
+MemoryMax=26G
+MemorySwapMax=24G
+OOMPolicy=stop
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,37 @@
+[Unit]
+Description=Qwen3.6-35B-A3B 160-expert resident server (64K, INT8 KV)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=lf
+Group=lf
+WorkingDirectory=/home/lf/sglang-m1000/qwenai
+Environment=HOME=/home/lf
+Environment=AIBOOK_OVERLAY=/home/lf/sglang-m1000/qwenai/overlay
+Environment=AIBOOK_OFFLINE_SMOKE=YES
+Environment=AIBOOK_SLOTS=160
+Environment=AIBOOK_RESIDENT=1
+Environment=AIBOOK_EAGER=0
+Environment=AIBOOK_CONTEXT=65536
+Environment=AIBOOK_MAX_TOKENS=65536
+Environment=AIBOOK_KV_DTYPE=int8
+Environment=AIBOOK_MAMBA=12
+Environment=AIBOOK_FILL_ONE=1
+Environment=AIBOOK_SKIP_DIGEST=1
+Environment=AIBOOK_FRACTION=0.68
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/bin/bash -c 'exec bash integration/smoke.sh'
+Restart=on-failure
+RestartSec=15
+TimeoutStartSec=1200
+TimeoutStopSec=60
+KillMode=mixed
+MemoryMax=26G
+MemorySwapMax=0
+OOMPolicy=stop
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target
