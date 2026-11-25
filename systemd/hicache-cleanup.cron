@@ -1,0 +1,2 @@
+# Delete HiCache file-backend entries older than 14 days; keep the directory itself.
+17 4 * * * find /home/lf/.cache/sglang-hicache -type f -mtime +14 -delete >/dev/null 2>&1; find /home/lf/.cache/sglang-hicache -type d -empty -delete >/dev/null 2>&1
