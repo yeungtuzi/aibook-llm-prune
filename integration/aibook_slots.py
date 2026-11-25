@@ -32,6 +32,7 @@ _LAYERS, _EXPERTS, _K, _H = 40, 256, 8, 2048
 _STRIDE, _RECORD = 1581056, 1579008
 _FILE_BYTES = (_EXPERTS - 1) * _STRIDE + _RECORD  # no trailing padding
 _COMPONENTS = ('w13_qweight', 'w2_qweight', 'w13_scales', 'w2_scales')
+_COMPONENT_BYTES = (1024 * 1024, 2048 * 256, 1024 * 2, 2048 * 2)
 # One pinned record per possible fill in a layer, shared by all layers: fills
 # are serialized by _SERIAL and the next layer's route wait fences them.
 _STAGES = []
@@ -125,16 +126,29 @@ class BoundedExperts(nn.Module):
             if self._device.type != 'musa':
                 raise RuntimeError('construct BoundedExperts on the model MUSA device')
             self._mapped = [] if os.environ.get('AIBOOK_MAPPED_SLOTS') == '1' else None
-            for key, shape, dtype in (
-                    ('w13', (slots, 1024, 1024), torch.uint8),
-                    ('w2', (slots, 2048, 256), torch.uint8),
-                    ('s13', (slots, 1024, 1), torch.float16),
-                    ('s2', (slots, 2048, 1), torch.float16)):
-                if self._mapped is not None:
+            if self._mapped is None:
+                # One flat bank-major device buffer: a layer's 160 experts can
+                # then be uploaded with one large H2D instead of 4*160 small ones.
+                self._flat = torch.empty((slots * _RECORD,), dtype=torch.uint8, device=self._device)
+                self.register_buffer('_flat', self._flat, persistent=False)
+                offset = 0
+                for key, shape, dtype, nbytes in (
+                        ('w13', (slots, 1024, 1024), torch.uint8, _COMPONENT_BYTES[0]),
+                        ('w2', (slots, 2048, 256), torch.uint8, _COMPONENT_BYTES[1]),
+                        ('s13', (slots, 1024, 1), torch.float16, _COMPONENT_BYTES[2]),
+                        ('s2', (slots, 2048, 1), torch.float16, _COMPONENT_BYTES[3])):
+                    view = self._flat[offset:offset + slots * nbytes].view(dtype).view(shape)
+                    offset += slots * nbytes
+                    self.register_buffer(key, view, persistent=False)
+            else:
+                for key, shape, dtype in (
+                        ('w13', (slots, 1024, 1024), torch.uint8),
+                        ('w2', (slots, 2048, 256), torch.uint8),
+                        ('s13', (slots, 1024, 1), torch.float16),
+                        ('s2', (slots, 2048, 1), torch.float16)):
                     from mapped_banks import Bank
-                    bank=Bank(shape,dtype,self._device);self._mapped.append(bank);tensor=bank.tensor
-                else:tensor=torch.empty(shape,dtype=dtype,device=self._device)
-                self.register_buffer(key, tensor, persistent=False)
+                    bank=Bank(shape,dtype,self._device);self._mapped.append(bank)
+                    self.register_buffer(key, bank.tensor, persistent=False)
         except BaseException:
             self._weights.close()
             raise
@@ -164,8 +178,11 @@ class BoundedExperts(nn.Module):
             self.register_buffer('prune_mask', mask, persistent=False)
             self._g = torch.empty((_K, 1024), dtype=torch.float16, device=self._device)
             self._d = torch.empty((_K, _H), dtype=torch.float16, device=self._device)
-            for slot, expert in enumerate(self._kept):
-                self._fill(slot, expert, None)
+            if self._mapped is None:
+                self._resident_preload()
+            else:
+                for slot, expert in enumerate(self._kept):
+                    self._fill(slot, expert, None)
         if self._mapped is None:
             self._ix_cpu = torch.empty((1, _K), dtype=torch.int32, device='cpu', pin_memory=True)
             self._ix_np = self._ix_cpu.numpy()
@@ -191,6 +208,39 @@ class BoundedExperts(nn.Module):
             self._slot_of.pop(old, None)
         self._tags[slot] = expert
         self._slot_of[expert] = slot
+
+    def _resident_preload(self):
+        """Read a full layer into a pinned bank-major host buffer, then one H2D."""
+        n = len(self._kept)
+        host = torch.empty((n * _RECORD,), dtype=torch.uint8, pin_memory=True)
+        hv = memoryview(host.numpy())
+        offsets = []
+        off = 0
+        for nbytes in _COMPONENT_BYTES:
+            offsets.append(off)
+            off += n * nbytes
+        fd = self._weights.fileno()
+        info = os.fstat(fd)
+        if (info.st_size, info.st_mtime_ns, info.st_ctime_ns) != self._stamp:
+            raise ValueError('deployed weights inode changed after verification')
+        rec = bytearray(_RECORD)
+        for slot, expert in enumerate(self._kept):
+            if os.preadv(fd, [rec], expert * _STRIDE) != _RECORD:
+                raise OSError(f'short read for expert {expert}')
+            if not self._skip_digest and not self._verified[expert]:
+                h = hashlib.sha256()
+                h.update(rec)
+                if h.hexdigest() != self._records[expert]:
+                    raise ValueError(f'weight digest mismatch for expert {expert}')
+                self._verified[expert] = 1
+            mv = memoryview(rec)
+            pos = 0
+            for nbytes, boff in zip(_COMPONENT_BYTES, offsets):
+                dst = boff + slot * nbytes
+                hv[dst:dst + nbytes] = mv[pos:pos + nbytes]
+                pos += nbytes
+            self._set_tag(slot, expert)
+        self._flat.copy_(host)
 
     def _fill(self, slot, expert, stage):
         fd = self._weights.fileno()
