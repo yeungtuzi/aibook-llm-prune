@@ -29,8 +29,9 @@ def pack_root():
 def validate(args, config, load):
     """Called at loader selection, before the vendor allocates any model layers."""
     mtp = os.environ.get('AIBOOK_MTP') == '1'
+    dflash = os.environ.get('AIBOOK_DFLASH') == '1'
     if getattr(config, 'is_draft_model', False) or getattr(load, 'draft_model_idx', None) is not None:
-        require(mtp, 'draft model load requires AIBOOK_MTP=1')
+        require(mtp or dflash, 'draft model load requires AIBOOK_MTP=1 or AIBOOK_DFLASH=1')
         os.environ['AIBOOK_LOADING_DRAFT'] = '1'
         return
     require(config is not None and config.hf_config.architectures == ['Qwen3_5MoeForConditionalGeneration']
@@ -45,7 +46,7 @@ def validate(args, config, load):
             and args.tp_size == args.ep_size == args.pp_size == args.dp_size == args.max_running_requests == 1,
             'require MUSA language-only, one worker/request, separate shared expert')
     require(not (args.enable_torch_compile or args.enable_lora or args.enable_eplb or args.ep_num_redundant_experts
-                 or (args.speculative_algorithm and not mtp) or args.enable_dp_attention or args.enable_two_batch_overlap
+                 or (args.speculative_algorithm and not (mtp or dflash)) or args.enable_dp_attention or args.enable_two_batch_overlap
                  or args.cpu_offload_gb or args.enable_weights_cpu_backup or args.weight_loader_prefetch_checkpoints
                  or args.custom_weight_loader) and args.weight_cache_mode == 'off'
             and args.init_expert_location == 'trivial' and args.startup_weight_load_mode == 'serial',
@@ -76,7 +77,7 @@ def make_experts(block, config, quant, a2a, epilogue):
 
 def check_model(model):
     from aibook_slots import BoundedExperts
-    if model.__class__.__name__.endswith('MTP'):
+    if model.__class__.__name__.endswith('MTP') or 'DFlash' in model.__class__.__name__:
         return
     layers = model.model.layers
     require(len(layers) == 40 and all(isinstance(layer.mlp.experts, BoundedExperts)
@@ -114,9 +115,13 @@ def weights(files, source, safetensors):
     # get_tensor for MTP/vision (text-only), or for any routed checkpoint key.
     skipped = passed = 0
     allow_mtp = os.environ.get('AIBOOK_LOADING_DRAFT') == '1'
+    dflash = os.environ.get('AIBOOK_DFLASH') == '1'
     for path in files:
         with safe_open(path, framework='pt', device='cpu') as shard:
             for name in shard.keys():
+                if allow_mtp and dflash:
+                    yield name, shard.get_tensor(name)
+                    continue
                 if allow_mtp and name.startswith('mtp.'):
                     yield name, shard.get_tensor(name)
                     continue
