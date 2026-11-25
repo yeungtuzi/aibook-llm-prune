@@ -1,0 +1,22 @@
+{
+  "date": "2026-11-25",
+  "corpus": {
+    "path": "/home/lf/aibook-bench/ngram-corpus.jsonl",
+    "docs": 8356,
+    "tokens": 1554853,
+    "bytes": 5724819,
+    "sources": ["tldr-pages", "cheat/cheatsheets", "systemd units", "Ubuntu man EXAMPLES", "selected /etc configs"]
+  },
+  "musa_enablement": [
+    "patched speculative_hook.py device guard to allow musa",
+    "set NGRAM BFS breadth=1 to avoid paged-attention topk>1 validation",
+    "restored UA_DECODE_KV_BLOCK_BUCKETS preservation for verify 3D buckets"
+  ],
+  "runs": [
+    {"config": "160 / 64K / FP16 KV / draft 12", "result": "Loaded corpus; guard stopped at 4.02 GB during verify graph capture"},
+    {"config": "160 / 64K / FP16 KV / draft 6", "result": "same guard stop at 4.02 GB"},
+    {"config": "128 / 64K / FP16 KV / draft 6", "result": "ready, 5.42 GB free; first request fell to 3.97 GB and guard stopped"},
+    {"config": "96 / 32K / FP16 KV / draft 6", "result": "ready, 8.75 GB free; first request crashed: NotImplementedError: MUSA tree verify currently supports topk=1 only"}
+  ],
+  "conclusion": "NGRAM external corpus loads and startup works on MUSA after guards, but NGRAM needs tree verify and the MUSA verify kernel only implements topk=1. INT8 KV cannot be used with speculative verify, so FP16 KV plus verify workspace also breaks the >6GB budget at 160/64K. NGRAM is not viable on this build/platform without a MUSA topk>1 tree-verify kernel."
+}
