@@ -2,6 +2,8 @@
 
 AIBOOK（M1000，32 GB 统一内存）上的 Qwen3.6-35B-A3B 专家剪枝 / 全量驻留 / N-gram 投机解码项目。
 
+- **工作基线**：MUSA 官方 SGLang-M1000 文档 [version-20261030](https://docs.mthreads.com/sglang-musa-m1000/version-20261030/sglang-musa-m1000-doc-online)。本机实际安装的 wheel 是 `sglang 0.5.18+20261101.torch2.11`；本项目的 overlay、kernel 调用和测量都以这条 MUSA 分支为基线，没有直接升级到上游 v0.5.23。
+
 ## 发布配置（2026-11-25）
 
 - **Coder 场景**：256 → **160 专家**（按 coder 模型的路由频次校准），160 全量驻留，64k 上下文，INT8 KV，无投机解码；基线 **20.4 tok/s**。
