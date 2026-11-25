@@ -1,0 +1,13 @@
+{
+  "date": "2026-11-25",
+  "purpose": "test whether reducing Mamba cache 12 -> 4 shortens the 13s post-load gap",
+  "mamba_4": {"max_mamba_cache_size": 4, "conv_gb": 0.01, "ssm_gb": 0.29,
+              "load_weight_s": 21.80, "kv_cache_allocation_s": 0.36,
+              "decode_graph_s": 12.12, "scheduler_e2e_s": 73.53, "tokenizer_e2e_s": 87.84,
+              "available_bytes": 8219856 * 1024, "warm_decode_tok_s": [17.12, 17.28]},
+  "mamba_12": {"max_mamba_cache_size": 12, "conv_gb": 0.02, "ssm_gb": 0.76,
+               "load_weight_s": 20.79, "kv_cache_allocation_s": 0.59,
+               "decode_graph_s": 11.92, "scheduler_e2e_s": 73.05, "tokenizer_e2e_s": 87.47,
+               "available_bytes": 7737724 * 1024, "warm_decode_tok_s": [17.33]},
+  "conclusion": "Mamba 4 saves about 0.8GB but does not shorten startup; the ~13s gap is not KV (0.36-0.60s) and not Mamba size. It is a fixed post-load GPU copy/sync drain. Reverted to Mamba 12."
+}
