@@ -76,7 +76,7 @@ if [[ ${AIBOOK_NGRAM:-0} == 1 ]]; then
     NGRAM_ARGS=(--speculative-algorithm NGRAM
                 --speculative-num-draft-tokens "${AIBOOK_NGRAM_DRAFT:-12}"
                 --speculative-num-steps "${AIBOOK_NGRAM_STEPS:-1}"
-                --speculative-eagle-topk 1
+                --speculative-eagle-topk 1 --speculative-ngram-max-bfs-breadth 1
                 --speculative-ngram-external-corpus-path "$AIBOOK_NGRAM_CORPUS"
                 --speculative-ngram-external-corpus-max-tokens "${AIBOOK_NGRAM_MAX_TOKENS:-7000000}"
                 --speculative-ngram-external-sam-budget "${AIBOOK_NGRAM_SAM_BUDGET:-8}"
