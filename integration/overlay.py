@@ -8,12 +8,14 @@ import sys
 # Paths are relative to site-packages. Drift is an error, never fuzzy patch.
 BLOCK = 'sglang/srt/models/qwen2_moe.py'
 LOADER = 'sglang/srt/model_loader/loader.py'
+SPEC_HOOK = 'sglang/srt/arg_groups/speculative_hook.py'
 PINS = {
     BLOCK: '458c5ee4eb425310ce9eb2f664cc6f1e608d36f3056bf306a07025fc7f259b1e',
     LOADER: '543e5a49a45fa738ff7115820dc07e5d1074387d6583b4204e58e09e1e25ded9',
     'sglang/srt/models/qwen3_5.py': '4f5b6311857e3f5fc0045c06797bbc50138d8185658147e4f311f0112bfd38cb',
     'sglang/srt/layers/quantization/moe_wna16.py': '23146f3f51a00247d5e78f5771bff354bf98587d22de36094c6dae928fa6bb9d',
     'mate/batched_gemv/tilelang/batched_gemv_w4a16_moe.py': '7654aacc136978cb3c12f348794cc3203f285521afc295588cce368d163d9750',
+    SPEC_HOOK: '0817c9e460a94b62abc08702d51e3dc1ba47a739ab9dd6ef2227ffd6787a4f8f',
 }
 
 
@@ -29,7 +31,7 @@ def transform(site):
         data = (site/name).read_bytes()
         if hashlib.sha256(data).hexdigest() != sha:
             raise ValueError('vendor source drift: ' + name)
-        if name in (LOADER, BLOCK):
+        if name in (LOADER, BLOCK, SPEC_HOOK):
             sources[name] = data.decode()
     src = sources[BLOCK]
     start = '        self.experts = get_moe_impl_class(quant_config)('
@@ -63,6 +65,12 @@ def transform(site):
         '        self.counter_before_loading_weights = time.perf_counter()\n'
         '        return weights(hf_weights_files, source, use_safetensors)\n\n') + src[end:]
     sources[LOADER] = src
+    src = sources[SPEC_HOOK]
+    src = replace_once(src, 'if server_args.device not in ("cuda", "cpu"):',
+                       'if server_args.device not in ("cuda", "cpu", "musa"):')
+    src = replace_once(src, 'Ngram speculative decoding only supports CUDA or CPU devices.',
+                       'Ngram speculative decoding only supports CUDA, CPU or MUSA devices.')
+    sources[SPEC_HOOK] = src
     for path, src in sources.items():
         compile(src, path, 'exec')
     return sources
