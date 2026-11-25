@@ -1,0 +1,11 @@
+{
+  "date": "2026-11-25",
+  "goal": "replace 4*160 small H2D copies per layer with one large per-layer H2D",
+  "implementation": "bank-major flat device buffer + pinned host layer buffer, one copy_ per layer",
+  "result": {"load_weight_s": 19.45, "kv_cache_allocation_s": 1.14, "decode_graph_s": 13.02,
+             "scheduler_e2e_s": 72.97, "tokenizer_e2e_s": 87.49},
+  "baseline": {"load_weight_s": 20.79, "kv_cache_allocation_s": 0.59, "decode_graph_s": 11.92,
+               "scheduler_e2e_s": 73.05, "tokenizer_e2e_s": 87.47},
+  "conclusion": "No startup gain; the fixed ~13s post-load gap is not the per-expert H2D loop. Reverted to the per-expert _fill path.",
+  "service_note": "qwenai was stopped externally at 11:44:58; left stopped per user instruction."
+}
