@@ -1,0 +1,10 @@
+{
+  "purpose": "test whether 160 + MTP-160 + 128k FP16 KV can allocate the full 128k, and report the resulting free memory",
+  "inputs": {"pre_model_load_gb": 24.7, "available_after_weights_draft_gb": 7.6, "mamba_reserve_gb": 1.0,
+             "needed_kv_gb": 2.5, "draft_loaded_gb": 3.0},
+  "formula": "rest = available - pre*(1-fraction) - mamba; need rest >= 2.5 for 128k FP16 KV",
+  "required_fraction": 0.834,
+  "chosen_fraction": 0.85,
+  "expected_kv_gb": 2.9,
+  "note": "INT8 KV cannot be used with MTP (explicitly unsupported), so this test uses FP16 KV"
+}
