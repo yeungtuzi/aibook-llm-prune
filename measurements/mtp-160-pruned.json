@@ -1,0 +1,16 @@
+{
+  "date": "2026-11-25",
+  "mtp_head": {"original_experts": 256, "pruned_experts": 160, "table": "prune-160.json layer 0",
+               "tensors": 19, "checkpoint_bytes": 1084908544, "path": "/home/lf/models/mtp-160"},
+  "launch": {"experts": 160, "context": 16384, "draft": "mtp-160", "kv": "fp16",
+             "mamba_cache": 12, "mem_fraction_static": 0.78, "guard_cap_gb": 28},
+  "draft_loaded_bytes": 3000000000,
+  "idle_available_bytes": 4935557120,
+  "peak_available_drop_bytes": 25704128512,
+  "decode_tps": 23.43,
+  "accept_len": 3.80,
+  "accept_rate": 0.93,
+  "correctness": "FAIL: same corruption as the unpruned head; first lines are valid then a run of '!'",
+  "int8_kv": "explicitly unsupported with speculative decode: 'Per-token/per-head INT8 KV cache does not yet support speculative decode or verify attention'",
+  "conclusion": "pruning the MTP head to 160 is necessary for consistency/memory but does NOT fix the corruption; the defect is in the MTP verify path, not the unpruned draft head"
+}
