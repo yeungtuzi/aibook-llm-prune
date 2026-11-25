@@ -1,0 +1,14 @@
+{
+  "date": "2026-11-25",
+  "goal_round": 2,
+  "purpose": "Try to avoid the CPU tree walk by forcing a linear NGRAM tree (external SAM budget 1).",
+  "debug_tree": {
+    "budget_4": {"cand": [84799, 60, 198, 4848, 28, 0], "next": [1,2,3,4,-1,-1],
+                 "sibling": [-1,5,-1,-1,-1,-1], "target_predict": [60,198,4848,28,71061,198]},
+    "budget_1": {"cand": [84799, 60, 0, 0, 0, 0], "next": [1,-1,-1,-1,-1,-1],
+                 "sibling": [-1,2,3,4,5,-1], "target_predict": [60,198,4848,4848,4848,0]}
+  },
+  "result": "Budget 1 yields only one real child then unused siblings; budget 4 yields a main chain of 4 plus a sibling. The tree is inherently irregular, so native MUSA topk=1 linear verify cannot represent it. CPU tree walk remains required and costs more than the draft gain.",
+  "speed": {"exact_copy_budget4_cpu_fallback_tok_s": 7.7, "baseline_160_64k_int8_tok_s": 20.4},
+  "conclusion": "No usable NGRAM speedup on MUSA without a native topk>1 tree-verify kernel; 160/64K also exceeds the 6GB budget with FP16 KV + verify workspace."
+}
