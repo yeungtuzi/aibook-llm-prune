@@ -1,0 +1,17 @@
+{
+  "date": "2026-11-25",
+  "config": "128-slot LRU paging over the full 256-expert pack + NGRAM 8/32K, FP16 KV",
+  "results": {
+    "copy_6x_systemd_unit": {"tokens": 815, "seconds": 163.89, "tok_s": 4.97},
+    "ops_prompt": {"tokens": 537, "seconds": 144.37, "tok_s": 3.72},
+    "accept_len": "mostly 1.0, occasional 2.0",
+    "free_gb": 5.19
+  },
+  "comparison": {
+    "128_slot_paging_no_spec": 13.21,
+    "96_resident_32k_ngram_match": 32.8,
+    "96_resident_32k_ngram_miss": 14.94,
+    "160_resident_64k_int8": 20.4
+  },
+  "conclusion": "Paging + NGRAM is not additive: 128 slots + 32K + NGRAM falls to 4.97 tok/s copy and 3.72 tok/s ops, with only 5.19 GB free. The paging miss fill and the NGRAM verify union read compound; accept stays low. This hybrid is rejected. The 128-slot paging path already indexes all 256 native experts, so restoring 256 is not a new capability; pruning only applies to the resident-160 profile."
+}
