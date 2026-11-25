@@ -98,6 +98,13 @@ OVERLAP_ARGS=()
 if [[ ${AIBOOK_OVERLAP:-0} != 1 ]]; then
     OVERLAP_ARGS=(--disable-overlap-schedule)
 fi
+WARMUP_ARGS=()
+case "${AIBOOK_WARMUP:-short}" in
+    0|off|none) WARMUP_ARGS=(--skip-server-warmup) ;;
+    short) ;;
+    prefill) WARMUP_ARGS=(--warmups prefill_shapes) ;;
+    *) echo "unknown AIBOOK_WARMUP=${AIBOOK_WARMUP}" >&2; exit 2 ;;
+esac
 exec ./scripts/ci/musa/start_qwen36_chn_server.sh --disable-shared-experts-fusion \
     "${GRAPH_ARGS[@]}" \
-    "${OVERLAP_ARGS[@]}" "${KV_ARGS[@]}" "${MAMBA_ARGS[@]}" "${MTP_ARGS[@]}" "${DFLASH_ARGS[@]}" "${NGRAM_ARGS[@]}" "${DECODE_ARGS[@]}" --skip-server-warmup "${ROUTE_ARGS[@]}"
+    "${OVERLAP_ARGS[@]}" "${KV_ARGS[@]}" "${MAMBA_ARGS[@]}" "${MTP_ARGS[@]}" "${DFLASH_ARGS[@]}" "${NGRAM_ARGS[@]}" "${DECODE_ARGS[@]}" "${WARMUP_ARGS[@]}" "${ROUTE_ARGS[@]}"
