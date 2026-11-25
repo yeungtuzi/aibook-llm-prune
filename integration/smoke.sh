@@ -7,6 +7,8 @@ set -euo pipefail
 source "$HOME/sglang-m1000/env.sh"
 export AIBOOK_OVERLAY="$(realpath "$AIBOOK_OVERLAY")"
 export AIBOOK_PACK_ROOT="$HOME/sglang-m1000/routed-packs-v1" AIBOOK_SLOTS="${AIBOOK_SLOTS:-8}"
+export SGLANG_CACHE_DIR="${SGLANG_CACHE_DIR:-$HOME/.cache/sglang}"
+export TILELANG_CACHE_DIR="${TILELANG_CACHE_DIR:-$HOME/.cache/tilelang/sglang_m1000}"
 export AIBOOK_RESIDENT="${AIBOOK_RESIDENT:-0}"
 export AIBOOK_PRUNE="${AIBOOK_PRUNE:-$AIBOOK_OVERLAY/prune-$AIBOOK_SLOTS.json}"
 export MODEL_PATH="$HOME/models/gptq-Qwen3.6-35B-A3B-4bit-channel-lmhead"
@@ -63,6 +65,12 @@ if [[ $AIBOOK_EAGER == 1 ]]; then
 fi
 KV_ARGS=()
 if [[ -n ${AIBOOK_KV_DTYPE:-} ]]; then KV_ARGS=(--kv-cache-dtype "$AIBOOK_KV_DTYPE"); fi
+HICACHE_ARGS=()
+if [[ ${AIBOOK_HICACHE:-0} == 1 ]]; then
+    export SGLANG_HICACHE_FILE_BACKEND_STORAGE_DIR="${AIBOOK_HICACHE_DIR:-$HOME/.cache/sglang-hicache}"
+    HICACHE_ARGS=(--enable-hierarchical-cache --hicache-storage-backend file
+                  --hicache-ratio "${AIBOOK_HICACHE_RATIO:-1.0}" --hicache-write-policy write_through)
+fi
 MAMBA_ARGS=()
 if [[ -n ${AIBOOK_MAMBA:-} ]]; then MAMBA_ARGS=(--max-mamba-cache-size "$AIBOOK_MAMBA"); fi
 DFLASH_ARGS=()
@@ -107,4 +115,4 @@ case "${AIBOOK_WARMUP:-short}" in
 esac
 exec ./scripts/ci/musa/start_qwen36_chn_server.sh --disable-shared-experts-fusion \
     "${GRAPH_ARGS[@]}" \
-    "${OVERLAP_ARGS[@]}" "${KV_ARGS[@]}" "${MAMBA_ARGS[@]}" "${MTP_ARGS[@]}" "${DFLASH_ARGS[@]}" "${NGRAM_ARGS[@]}" "${DECODE_ARGS[@]}" "${WARMUP_ARGS[@]}" "${ROUTE_ARGS[@]}"
+    "${OVERLAP_ARGS[@]}" "${KV_ARGS[@]}" "${HICACHE_ARGS[@]}" "${MAMBA_ARGS[@]}" "${MTP_ARGS[@]}" "${DFLASH_ARGS[@]}" "${NGRAM_ARGS[@]}" "${DECODE_ARGS[@]}" "${WARMUP_ARGS[@]}" "${ROUTE_ARGS[@]}"
