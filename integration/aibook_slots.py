@@ -129,8 +129,7 @@ class BoundedExperts(nn.Module):
             if self._mapped is None:
                 # One flat bank-major device buffer: a layer's 160 experts can
                 # then be uploaded with one large H2D instead of 4*160 small ones.
-                self._flat = torch.empty((slots * _RECORD,), dtype=torch.uint8, device=self._device)
-                self.register_buffer('_flat', self._flat, persistent=False)
+                self.register_buffer('_flat', torch.empty((slots * _RECORD,), dtype=torch.uint8, device=self._device), persistent=False)
                 offset = 0
                 for key, shape, dtype, nbytes in (
                         ('w13', (slots, 1024, 1024), torch.uint8, _COMPONENT_BYTES[0]),
