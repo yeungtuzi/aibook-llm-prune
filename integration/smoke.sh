@@ -67,7 +67,7 @@ MAMBA_ARGS=()
 if [[ -n ${AIBOOK_MAMBA:-} ]]; then MAMBA_ARGS=(--max-mamba-cache-size "$AIBOOK_MAMBA"); fi
 MTP_ARGS=()
 if [[ ${AIBOOK_MTP:-0} == 1 ]]; then
-    MTP_ARGS=(--speculative-algorithm EAGLE --speculative-draft-model-path "$MODEL_PATH"
+    MTP_ARGS=(--speculative-algorithm EAGLE --speculative-draft-model-path "${AIBOOK_DRAFT:-$MODEL_PATH}"
               --speculative-num-steps "${AIBOOK_MTP_STEPS:-3}" --speculative-eagle-topk 1
               --speculative-num-draft-tokens "${AIBOOK_MTP_DRAFT:-4}"
               --max-mamba-cache-size "${AIBOOK_MAMBA:-12}")
