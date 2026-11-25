@@ -10,6 +10,7 @@ BLOCK = 'sglang/srt/models/qwen2_moe.py'
 LOADER = 'sglang/srt/model_loader/loader.py'
 SPEC_HOOK = 'sglang/srt/arg_groups/speculative_hook.py'
 EAGLE_UTILS = 'sglang/srt/speculative/eagle_utils.py'
+NGRAM_WORKER = 'sglang/srt/speculative/ngram_worker.py'
 PINS = {
     BLOCK: '458c5ee4eb425310ce9eb2f664cc6f1e608d36f3056bf306a07025fc7f259b1e',
     LOADER: '543e5a49a45fa738ff7115820dc07e5d1074387d6583b4204e58e09e1e25ded9',
@@ -18,6 +19,7 @@ PINS = {
     'mate/batched_gemv/tilelang/batched_gemv_w4a16_moe.py': '7654aacc136978cb3c12f348794cc3203f285521afc295588cce368d163d9750',
     SPEC_HOOK: '0817c9e460a94b62abc08702d51e3dc1ba47a739ab9dd6ef2227ffd6787a4f8f',
     EAGLE_UTILS: '32d9035c9c240f65876cdcbfd8f7d64ec5c7f6acba710b1978cb5f1af2a775ab',
+    NGRAM_WORKER: '74e8e20515dd0eb5c7e165c11480150f755a4bdf7c3089f953d3898fbc508b69',
 }
 
 
@@ -33,7 +35,7 @@ def transform(site):
         data = (site/name).read_bytes()
         if hashlib.sha256(data).hexdigest() != sha:
             raise ValueError('vendor source drift: ' + name)
-        if name in (LOADER, BLOCK, SPEC_HOOK, EAGLE_UTILS):
+        if name in (LOADER, BLOCK, SPEC_HOOK, EAGLE_UTILS, NGRAM_WORKER):
             sources[name] = data.decode()
     src = sources[BLOCK]
     start = '        self.experts = get_moe_impl_class(quant_config)('
@@ -100,6 +102,44 @@ def transform(site):
                     retrieve_index, retrieve_next_token, retrieve_next_sibling,
                     target_predict, topk)''')
     sources[EAGLE_UTILS] = src
+    src = sources[NGRAM_WORKER]
+    src = replace_once(src, '        self.adaptive_controller = None\n',
+        '        self.adaptive_controller = None\n'
+        '        self._aibook_gate_off = set()\n'
+        '        self._aibook_low = {}\n')
+    src = replace_once(src, '''    def forward_batch_generation(
+        self, batch: ScheduleBatch, on_publish=None
+    ) -> GenerationBatchResult:
+        fwd_stream''', '''    def _aibook_gate_bypass(self, batch):
+        live = {r.rid for r in batch.reqs}
+        self._aibook_gate_off &= live
+        self._aibook_low = {k: v for k, v in self._aibook_low.items() if k in live}
+        return bool(live) and all(rid in self._aibook_gate_off for rid in live)
+
+    def _aibook_observe_gate(self, batch, accept_lens):
+        for req, val in zip(batch.reqs, accept_lens.tolist()):
+            rid = req.rid
+            if rid in self._aibook_gate_off:
+                continue
+            low = self._aibook_low.get(rid, 0) + 1 if val <= 1 else 0
+            if low >= 4:
+                self._aibook_gate_off.add(rid)
+                self._aibook_low.pop(rid, None)
+                logging.warning("AIBOOK: NGRAM gate off rid=%s accept_len=%s", rid, val)
+            else:
+                self._aibook_low[rid] = low
+
+    def forward_batch_generation(
+        self, batch: ScheduleBatch, on_publish=None
+    ) -> GenerationBatchResult:
+        if self._aibook_gate_bypass(batch):
+            logging.warning("AIBOOK: NGRAM bypass to target decode")
+            return self.target_worker.forward_batch_generation(batch)
+        fwd_stream''')
+    src = replace_once(src, '            new_seq_lens = batch.seq_lens + accept_lens\n',
+        '            new_seq_lens = batch.seq_lens + accept_lens\n'
+        '            self._aibook_observe_gate(batch, accept_lens)\n')
+    sources[NGRAM_WORKER] = src
     for path, src in sources.items():
         compile(src, path, 'exec')
     return sources
