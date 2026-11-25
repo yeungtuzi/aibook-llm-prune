@@ -1,0 +1,9 @@
+{
+  "date": "2026-11-25",
+  "config": {"experts": 160, "draft": "mtp-160 (pruned)", "context": 131072, "kv": "fp16",
+             "mamba_cache": 12, "mem_fraction_static": 0.85, "guard_cap_gb": 30},
+  "result": "FAIL during CUDA graph capture (bs=1), not a valid 128k service",
+  "memory": {"peak_available_drop_bytes": 29655748608, "minimum_available_bytes": 547676160,
+             "cgroup_bytes": 4275412992, "swap": 0},
+  "conclusion": "128k + MTP-160 does not fit in 32GB even with the relaxed 30GB guard; available memory collapses to 0.55GB during capture. It cannot satisfy >6GB, and without the guard it would OOM."
+}

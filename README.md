@@ -72,3 +72,10 @@ python3 prune.py --keep 160 --out integration/prune-160.json
 - 请求期间系统可用 **8.19 GB**，峰值下降 23.38 GB，swap 0。
 - 128 token decode **20.43 tok/s**，输出正确。
 - 这是目前最好的可用配置；MTP 仍未叠加（draft 需 3.5 GB，会把可用内存压到约 4.7 GB，且 MTP 输出本身在约 30 token 后损坏）。
+
+## 128k + MTP-160 可行性（2026-11-25）
+
+- 160 + MTP-160 + 128k + FP16 KV + fraction 0.85（按公式预算）：
+  - 图捕获阶段可用内存跌到 **0.55 GB**，guard 停止，服务失败；
+  - 峰值内存下降 **29.66 GB**，swap 0。
+- 结论：**128k + MTP 在 32 GB 上不可行，更不可能满足 >6 GB**。INT8 KV 虽能救 128k，但明确不支持 speculative decode。
