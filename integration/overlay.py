@@ -84,8 +84,7 @@ def transform(site):
             verify_tree_greedy_musa(
                 predicts, accept_index, accept_token_num, candidates,
                 retrieve_index, retrieve_next_token, retrieve_next_sibling,
-                target_predict, topk)
-            return''')
+                target_predict, topk)''')
     sources[EAGLE_UTILS] = src
     for path, src in sources.items():
         compile(src, path, 'exec')
