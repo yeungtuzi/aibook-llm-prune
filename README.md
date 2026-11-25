@@ -1,6 +1,20 @@
 # aibook-llm-prune
 
-AIBOOK（M1000，32 GB 统一内存）上的 Qwen3.6-35B-A3B 专家剪枝 / 全量驻留 / 128k 上下文 / MTP 实验项目。
+AIBOOK（M1000，32 GB 统一内存）上的 Qwen3.6-35B-A3B 专家剪枝 / 全量驻留 / N-gram 投机解码项目。
+
+## 发布配置（2026-11-25）
+
+- **Coder 场景**：256 → **160 专家**（按 coder 模型的路由频次校准），160 全量驻留，64k 上下文，INT8 KV，无投机解码；基线 **20.4 tok/s**。
+- **运维场景**：同一套权重用 router mask 到 **96 专家**，用于系统安装/运维、故障定位、改配置、写脚本等任务。
+- **运维 N-gram 知识库**：基于 tldr、cheat/cheatsheets、systemd unit、Ubuntu man EXAMPLES、部分 `/etc` 配置构建，**1,554,853 tokens / 8,356 文档**，JSONL external corpus，配合 prompt lookup 做 N-gram 投机解码。
+- **性能**：96/32K + N-gram，draft=8、native `sgl_kernel.verify_tree_greedy`：
+  - 低匹配/miss：**约 15 tok/s**（accept len≈1）
+  - 高匹配/match：稳态 **32.8 tok/s**，683 token 复制任务平均 **36.8 tok/s**
+  - 相对低匹配约 **100% 提升**；相对 20.4 tok/s 基线约 **60% 提升**
+- **自适应门控（实验，默认关闭）**：连续 4 步 `accept_len <= 1` 时切回 target decode；当前 fallback 走 eager target decode，实测约 **9.6 tok/s**，低于基线，因此**没有按“无性能损失”发布**。需要时显式设置 `AIBOOK_NGRAM_GATE=1` 验证，不建议生产开启。
+- **内存**：96/32K 可用约 **8.8–9.2 GB**；128/64K 约 5.8 GB、160/64K 约 4.5 GB，均低于 >6 GB 约束，所以 N-gram 只在 96/32K 实验配置启用。
+- **MTP / DFLASH 未开启**：受 32 GB 内存限制，为保证系统剩余约 **8 GB** 基本可用性，MTP draft（约 3.5 GB）和 DFLASH draft 都没有叠加；DFLASH 实测对 160 剪枝 target 接受率为 0。
+- **生产服务**：仍是 `qwenai.service` 的 **160 / 64k / INT8 / 无投机**，20.4 tok/s；N-gram 是独立实验路径，不替换生产。
 
 ## 目标
 
