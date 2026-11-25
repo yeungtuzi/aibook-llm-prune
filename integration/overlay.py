@@ -146,6 +146,7 @@ def transform(site):
             res = self.target_worker.forward_batch_generation(batch)
             res.next_token_ids = res.next_token_ids.cpu()
             res.accept_lens = torch.ones(len(batch.reqs), dtype=torch.int32, device="cpu")
+            res.speculative_num_draft_tokens = 1
             res.num_correct_drafts = 0
             return res
         fwd_stream''')
