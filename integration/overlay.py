@@ -143,7 +143,11 @@ def transform(site):
                 batch.out_cache_loc = batch.out_cache_loc[: len(batch.reqs)]
             batch.forward_mode = ForwardMode.DECODE
             batch.spec_info = None
-            return self.target_worker.forward_batch_generation(batch)
+            res = self.target_worker.forward_batch_generation(batch)
+            res.next_token_ids = res.next_token_ids.cpu()
+            res.accept_lens = torch.ones(len(batch.reqs), dtype=torch.int32, device="cpu")
+            res.num_correct_drafts = 0
+            return res
         fwd_stream''')
     src = replace_once(src, '            new_seq_lens = batch.seq_lens + accept_lens\n',
         '            new_seq_lens = batch.seq_lens + accept_lens\n'
