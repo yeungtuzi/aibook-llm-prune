@@ -30,6 +30,7 @@ def validate(args, config, load):
     """Called at loader selection, before the vendor allocates any model layers."""
     mtp = os.environ.get('AIBOOK_MTP') == '1'
     dflash = os.environ.get('AIBOOK_DFLASH') == '1'
+    ngram = os.environ.get('AIBOOK_NGRAM') == '1'
     if getattr(config, 'is_draft_model', False) or getattr(load, 'draft_model_idx', None) is not None:
         require(mtp or dflash, 'draft model load requires AIBOOK_MTP=1 or AIBOOK_DFLASH=1')
         os.environ['AIBOOK_LOADING_DRAFT'] = '1'
@@ -46,7 +47,7 @@ def validate(args, config, load):
             and args.tp_size == args.ep_size == args.pp_size == args.dp_size == args.max_running_requests == 1,
             'require MUSA language-only, one worker/request, separate shared expert')
     require(not (args.enable_torch_compile or args.enable_lora or args.enable_eplb or args.ep_num_redundant_experts
-                 or (args.speculative_algorithm and not (mtp or dflash)) or args.enable_dp_attention or args.enable_two_batch_overlap
+                 or (args.speculative_algorithm and not (mtp or dflash or ngram)) or args.enable_dp_attention or args.enable_two_batch_overlap
                  or args.cpu_offload_gb or args.enable_weights_cpu_backup or args.weight_loader_prefetch_checkpoints
                  or args.custom_weight_loader) and args.weight_cache_mode == 'off'
             and args.init_expert_location == 'trivial' and args.startup_weight_load_mode == 'serial',
@@ -116,6 +117,7 @@ def weights(files, source, safetensors):
     skipped = passed = 0
     allow_mtp = os.environ.get('AIBOOK_LOADING_DRAFT') == '1'
     dflash = os.environ.get('AIBOOK_DFLASH') == '1'
+    ngram = os.environ.get('AIBOOK_NGRAM') == '1'
     for path in files:
         with safe_open(path, framework='pt', device='cpu') as shard:
             for name in shard.keys():

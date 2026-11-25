@@ -71,6 +71,17 @@ if [[ ${AIBOOK_DFLASH:-0} == 1 ]]; then
                  --speculative-draft-model-quantization unquant --speculative-draft-attention-backend fa3
                  --speculative-dflash-block-size 16 --speculative-draft-window-size 4096)
 fi
+NGRAM_ARGS=()
+if [[ ${AIBOOK_NGRAM:-0} == 1 ]]; then
+    NGRAM_ARGS=(--speculative-algorithm NGRAM
+                --speculative-num-draft-tokens "${AIBOOK_NGRAM_DRAFT:-12}"
+                --speculative-num-steps "${AIBOOK_NGRAM_STEPS:-1}"
+                --speculative-ngram-external-corpus-path "$AIBOOK_NGRAM_CORPUS"
+                --speculative-ngram-external-corpus-max-tokens "${AIBOOK_NGRAM_MAX_TOKENS:-7000000}"
+                --speculative-ngram-external-sam-budget "${AIBOOK_NGRAM_SAM_BUDGET:-8}"
+                --speculative-ngram-capacity "${AIBOOK_NGRAM_CAPACITY:-10000000}"
+                --speculative-ngram-max-trie-depth "${AIBOOK_NGRAM_DEPTH:-18}")
+fi
 MTP_ARGS=()
 if [[ ${AIBOOK_MTP:-0} == 1 ]]; then
     MTP_ARGS=(--speculative-algorithm EAGLE --speculative-draft-model-path "${AIBOOK_DRAFT:-$MODEL_PATH}"
@@ -84,4 +95,4 @@ if [[ ${AIBOOK_OVERLAP:-0} != 1 ]]; then
 fi
 exec ./scripts/ci/musa/start_qwen36_chn_server.sh --disable-shared-experts-fusion \
     "${GRAPH_ARGS[@]}" \
-    "${OVERLAP_ARGS[@]}" "${KV_ARGS[@]}" "${MAMBA_ARGS[@]}" "${MTP_ARGS[@]}" "${DFLASH_ARGS[@]}" --skip-server-warmup "${ROUTE_ARGS[@]}"
+    "${OVERLAP_ARGS[@]}" "${KV_ARGS[@]}" "${MAMBA_ARGS[@]}" "${MTP_ARGS[@]}" "${DFLASH_ARGS[@]}" "${NGRAM_ARGS[@]}" --skip-server-warmup "${ROUTE_ARGS[@]}"
