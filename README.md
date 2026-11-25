@@ -171,3 +171,21 @@ python3 prune.py --keep 160 --out integration/prune-160.json
 - decode graph 捕获约 12 s；这两项目前都无法跨进程持久化。
 - TileLang 编译缓存 `~/.cache/tilelang/sglang_m1000`（约 123 MB）持久化，重启复用。
 - 从 load begin 到 ready：**130 s → 47 s**。
+
+## JIT / warmup / prefix cache
+
+- **JIT 持久缓存已启用**：`TILELANG_CACHE_DIR=/home/lf/.cache/tilelang/sglang_m1000`（约 127 MB，3,700+ 文件），`SGLANG_CACHE_DIR=/home/lf/.cache/sglang`。编译结果跨重启复用；graph 捕获和运行时状态不能持久化。
+- **启动 warmup**：`AIBOOK_WARMUP=short`（默认，SGLang 内置短请求）或 `AIBOOK_WARMUP=prefill`（自定义 `aibook_prefill`）。默认只预热 **2K / 8K**：
+  ```bash
+  AIBOOK_WARMUP_SIZES=2048,8192
+  ```
+  需要 16K/64K 时显式加：
+  ```bash
+  AIBOOK_WARMUP=prefill AIBOOK_WARMUP_SIZES=16384,65520
+  ```
+  首次编译 16K/64K 很慢（16K 在本机已超过 5 分钟），但结果写入 TileLang 持久缓存，后续启动复用。
+- **HiCache 文件后端（实验，未进生产）**：SGLang 支持 `--enable-hierarchical-cache --hicache-storage-backend file`，路径由 `SGLANG_HICACHE_FILE_BACKEND_STORAGE_DIR` 指定。本机实测：
+  - 设备内 radix cache 命中正常（469 token 的重复请求 `cached_tokens=448`）；
+  - **file 后端没有写出 SSD 文件**（`~/.cache/sglang-hicache` 为空），在 hybrid Mamba/SSM 路径上尚未验证成功；
+  - 因此 `AIBOOK_HICACHE` 默认关闭，不用于生产。
+- **14 天清理**：`systemd/hicache-cleanup.cron`，每天 04:17 删除 `~/.cache/sglang-hicache` 下超过 14 天的文件；已安装到 `lf` 的 crontab。

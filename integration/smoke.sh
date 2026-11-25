@@ -7,7 +7,7 @@ set -euo pipefail
 source "$HOME/sglang-m1000/env.sh"
 export AIBOOK_OVERLAY="$(realpath "$AIBOOK_OVERLAY")"
 export AIBOOK_PACK_ROOT="$HOME/sglang-m1000/routed-packs-v1" AIBOOK_SLOTS="${AIBOOK_SLOTS:-8}"
-export AIBOOK_WARMUP_SIZES="${AIBOOK_WARMUP_SIZES:-2048,8192,16384,65520}"
+export AIBOOK_WARMUP_SIZES="${AIBOOK_WARMUP_SIZES:-2048,8192}"
 export SGLANG_CACHE_DIR="${SGLANG_CACHE_DIR:-$HOME/.cache/sglang}"
 export TILELANG_CACHE_DIR="${TILELANG_CACHE_DIR:-$HOME/.cache/tilelang/sglang_m1000}"
 export AIBOOK_RESIDENT="${AIBOOK_RESIDENT:-0}"
