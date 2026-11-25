@@ -105,6 +105,7 @@ def transform(site):
     src = sources[NGRAM_WORKER]
     src = replace_once(src, '        self.adaptive_controller = None\n',
         '        self.adaptive_controller = None\n'
+        '        self._aibook_gate_enabled = __import__("os").environ.get("AIBOOK_NGRAM_GATE") == "1"\n'
         '        self._aibook_gate_off = set()\n'
         '        self._aibook_low = {}\n')
     src = replace_once(src, '''    def forward_batch_generation(
