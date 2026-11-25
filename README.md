@@ -87,3 +87,12 @@ python3 prune.py --keep 160 --out integration/prune-160.json
 - 热态 decode **20.54 / 20.76 tok/s**（首个请求 16.85 tok/s）。
 - HumanEval 30 题 **80.0%**（对比 256 的 86.7%）。
 - 启动：`./serve-160-64k.sh`（默认 2400 秒 guard 窗口）。
+
+## 启动时间与 systemd（2026-11-25）
+
+- `qwenai.service`：160 + 64k + INT8，系统级 user=lf，已 enable，端口 30141；旧 `vllmd.service` 已删除（备份在 `systemd/vllmd.service.removed`）。
+- 启动瓶颈实测：权重加载 **101.8 s → 20.1 s**，靠 `AIBOOK_SKIP_DIGEST=1` 跳过每条 expert 记录的 SHA256；`verified.json` 和每层 manifest 仍校验。
+- `AIBOOK_FILL_ONE=1` 实测无改善（103.1 s），保留但非关键。
+- KV 分配约 14 s、decode graph 捕获约 12 s；这两项目前无法跨进程持久化。
+- TileLang 编译缓存 `~/.cache/tilelang/sglang_m1000`（约 123 MB）持久化，重启复用。
+- 从 load begin 到 ready：**130 s → 47 s**。
