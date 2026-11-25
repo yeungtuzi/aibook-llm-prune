@@ -1,0 +1,16 @@
+{
+  "date": "2026-11-25",
+  "discovery": "The installed sgl_kernel wheel already exports a native MUSA verify_tree_greedy op. It accepts arbitrary tree links with int64 tensors and does not need a new kernel. The 0.5.18 SGLang eagle_utils.py simply never called it for MUSA topk != 1.",
+  "integration": "AIBOOK_NGRAM native path calls sgl_kernel.verify_tree_greedy with candidates/retrieve/target kinds converted to int64; CPU and torch-tree paths remain behind env flags for comparison.",
+  "results": {
+    "96_32k_draft6": {"accept_len": 5.0, "accept_rate": 0.80, "steady_tok_s": 28.10,
+                       "copy_683_tokens": {"seconds": 18.55, "avg_tok_s": 36.83}, "free_gb": 9.17},
+    "96_32k_draft8": {"accept_len": 7.0, "accept_rate": 0.86, "steady_tok_s": 32.82,
+                       "copy_683_tokens": {"seconds": 31.16, "avg_tok_s": 21.92}, "free_gb": 8.81},
+    "96_32k_ops_prompt": {"accept_len": 1.0, "accept_rate": 0.0, "avg_tok_s": 14.94,
+                          "tokens": 649, "seconds": 43.44},
+    "128_64k": {"status": "ready", "free_gb": 5.82, "note": "below 6GB target"},
+    "160_64k": {"status": "guard-stop", "free_gb": 4.50, "note": "FP16 KV + NGRAM verify workspace exceeds budget"}
+  },
+  "conclusion": "Native MUSA tree verify works. 96/32K now reaches accept len 7 and 32.8 tok/s steady with 8.8GB free, satisfying the feasible-config goal. 128/64K and 160/64K still fail the >6GB constraint because NGRAM verify cannot use INT8 KV. Free-form ops prompts still accept ~1 draft and are slower than baseline."
+}
